@@ -1,4 +1,15 @@
 import Image from "next/image";
+import { io } from 'socket.io-client';
+
+async function socketConnect() {
+  const socket = io();
+  document.getElementById("connect")?.addEventListener("click", () =>{
+    socket.emit("connection signal", {"status": "OK"})
+  });
+  socket.on("connect", ()=>{
+    console.log("yo");
+  })
+}
 
 export default function Home() {
   return (
@@ -62,6 +73,9 @@ export default function Home() {
           >
             Documentation
           </a>
+          <button id="connect">
+            Connect
+          </button>
         </div>
       </main>
     </div>
