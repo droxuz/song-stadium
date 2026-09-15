@@ -1,0 +1,9 @@
+FROM redis:8
+
+EXPOSE 6379
+
+HEALTHCHECK --interval=10s --timeout=3s --start-period=5s --retries=3 \
+  CMD redis-cli ping | grep -q PONG || exit 1
+
+# Persist writes and avoid silently evicting matchmaking entries.
+CMD ["redis-server", "--appendonly", "yes", "--maxmemory-policy", "noeviction"]
