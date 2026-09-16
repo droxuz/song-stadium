@@ -4,7 +4,7 @@ services:
   redis:
     build:
       context: ./backend
-      dockerfile: dockerfile
+      dockerfile: dockerfile.redis
     volumes:
       - redis-data:/data
 
