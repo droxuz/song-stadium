@@ -3,7 +3,6 @@ import { createServer } from 'node:http';
 import { Server, Socket } from 'socket.io';
 import { randomUUID } from 'node:crypto';
 import { createClient } from 'redis';
-import { timeStamp } from 'node:console';
 
 const app = express();
 const server = createServer(app);
@@ -63,6 +62,17 @@ io.on('connection', (socket) => {
             socket.emit('queueError', {message: "Could not connect to queue. Please try again."});
         }
     });
+
+    socket.on('leaveQueue', async () => {
+        const queueKey = "matchmaking:na-east:ranked";
+        try{
+            await redis.multi().zRem(queueKey, playerID).del(`matchmaking:player:${playerID}`).exec();
+            socket.on("disconnect", () => {connectedPlayers.delete(playerID)});
+            socket.emit('queueLeft')
+        } catch (error){
+            socket.emit('queueError', {message: "Could not leave the Queue. Please try again."});
+        };
+    });
 });
 
 
@@ -75,6 +85,11 @@ startServer().catch((error) => {
     process.exit(1)
 });
 
+
+
+// So based upon any abitrary number of songs for users to guess, 
+// Create a package of song that the server can then divy out to clients 
+// The server will then only accept answer from the client and then check answer and respond accordingly
 
 
 
