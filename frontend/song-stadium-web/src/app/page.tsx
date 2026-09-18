@@ -22,6 +22,15 @@ export default function Home() {
       console.error("Failed to connect to server:", error.message)
     })
 
+    socket.on("joinQueue", () => {
+
+    });
+
+    socket.on("leaveQueue", () => {
+      
+    });
+
+    socket.connect();
     return() => {
       socket.disconnect();
       socket.removeAllListeners();
@@ -29,9 +38,20 @@ export default function Home() {
     }
   }, []);
 
-  const handleConnection = (): void => {
-    console.log(`PRESSED`)
-    socketRef.current?.connect()
+  const handleQueueConnection = (): void => {
+    console.log(`Attempt to join queue`)
+    socketRef.current?.emit("joinQueue");
+    socketRef.current?.on('queueJoined', (data) => {
+      console.log(data.message);
+    });
+  };
+
+  const handleQueueDisconnection = (): void => {
+    console.log(`Attempt to leave queue`)
+    socketRef.current?.emit("leaveQueue");
+    socketRef.current?.on('queueLeft', (data) => {
+      console.log(data.message);
+    });
   };
 
   return (
@@ -97,7 +117,7 @@ export default function Home() {
           </a>
           <button
           className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]" 
-          onClick={handleConnection}>
+          onClick={handleQueueConnection}>
             Connect
           </button>
         </div>

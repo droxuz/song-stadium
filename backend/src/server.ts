@@ -40,8 +40,8 @@ async function startServer() {
 // On connection and disconnect
 // Matchmaker using Time spent in queue, ELO, and player name
 io.on('connection', (socket) => {
-    const playerID = randomUUID();
-    const elo = 150
+    const playerID = randomUUID(); // database value
+    const elo = 150 // database value
     connectedPlayers.set(playerID, socket)// Creates map element of key playerID, value socket
     console.log(`Player Connected: ${socket.id}`);
     socket.on('disconnect', () =>{  
@@ -56,7 +56,7 @@ io.on('connection', (socket) => {
         const queueKey = "matchmaking:na-east:ranked";
         try{
             await redis.multi().zAdd(queueKey, {value: playerID, score: elo }).hSet(`matchmaking:player:${playerID}`, {joinedAt: timeJoined.toString(), region: "na-east"}).exec();
-            socket.emit('queueJoined')
+            socket.emit('queueJoined', {message: "Successfully joined the queue."});
         } catch (error) {
             console.error(`Error: ${error}`)
             socket.emit('queueError', {message: "Could not connect to queue. Please try again."});
@@ -68,7 +68,7 @@ io.on('connection', (socket) => {
         try{
             await redis.multi().zRem(queueKey, playerID).del(`matchmaking:player:${playerID}`).exec();
             socket.on("disconnect", () => {connectedPlayers.delete(playerID)});
-            socket.emit('queueLeft')
+            socket.emit('queueLeft', {message: "Successfully left the queue."});
         } catch (error){
             socket.emit('queueError', {message: "Could not leave the Queue. Please try again."});
         };
