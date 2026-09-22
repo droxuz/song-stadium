@@ -1,5 +1,10 @@
 {
   "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "test": "node --import tsx --test tests/queue.test.mjs",
+    "typecheck": "tsc --noEmit"
+  },
   "dependencies": {
     "express": "^5.2.1",
     "redis": "^6.2.1",

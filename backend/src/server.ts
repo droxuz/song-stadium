@@ -1,8 +1,9 @@
 import express from 'express';
 import { createServer } from 'node:http';
-import { Server, Socket } from 'socket.io';
+import { Server, type Socket } from 'socket.io';
 import { randomUUID } from 'node:crypto';
 import { createClient } from 'redis';
+import { createQueueStore, registerQueueHandlers } from './queue.js';
 
 const app = express();
 const server = createServer(app);
@@ -19,6 +20,7 @@ const io = new Server(server, {
 const redis = createClient({
     url: process.env.REDIS_URL ?? "redis://127.0.0.1:6379",
 });
+const queue = createQueueStore(redis);
 
 redis.on('error', (error) => {
     console.error(`Redis Error ${error}`)
@@ -40,7 +42,7 @@ async function startServer() {
 // On connection and disconnect
 // Matchmaker using Time spent in queue, ELO, and player name
 io.on('connection', (socket) => {
-    const playerID = randomUUID(); // database value
+    const playerID = randomUUID(); // Temporary guest identity for this connection.
     const elo = 150 // database value
     connectedPlayers.set(playerID, socket)// Creates map element of key playerID, value socket
     console.log(`Player Connected: ${socket.id}`);
@@ -51,28 +53,7 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('joinQueue', async () =>{
-        const timeJoined = Date.now();
-        const queueKey = "matchmaking:na-east:ranked";
-        try{
-            await redis.multi().zAdd(queueKey, {value: playerID, score: elo }).hSet(`matchmaking:player:${playerID}`, {joinedAt: timeJoined.toString(), region: "na-east"}).exec();
-            socket.emit('queueJoined', {message: "Successfully joined the queue."});
-        } catch (error) {
-            console.error(`Error: ${error}`)
-            socket.emit('queueError', {message: "Could not connect to queue. Please try again."});
-        }
-    });
-
-    socket.on('leaveQueue', async () => {
-        const queueKey = "matchmaking:na-east:ranked";
-        try{
-            await redis.multi().zRem(queueKey, playerID).del(`matchmaking:player:${playerID}`).exec();
-            socket.on("disconnect", () => {connectedPlayers.delete(playerID)});
-            socket.emit('queueLeft', {message: "Successfully left the queue."});
-        } catch (error){
-            socket.emit('queueError', {message: "Could not leave the Queue. Please try again."});
-        };
-    });
+    registerQueueHandlers(socket, playerID, elo, queue);
 });
 
 

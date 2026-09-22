@@ -22,12 +22,16 @@ export default function Home() {
       console.error("Failed to connect to server:", error.message)
     })
 
-    socket.on("joinQueue", () => {
-
+    socket.on("queueJoined", (data: { message: string }) => {
+      console.log(data.message);
     });
 
-    socket.on("leaveQueue", () => {
-      
+    socket.on("queueLeft", (data: { message: string }) => {
+      console.log(data.message);
+    });
+
+    socket.on("queueError", (data: { message: string }) => {
+      console.log(data.message);
     });
 
     socket.connect();
@@ -39,19 +43,15 @@ export default function Home() {
   }, []);
 
   const handleQueueConnection = (): void => {
+    if (!socketRef.current?.connected) return;
     console.log(`Attempt to join queue`)
-    socketRef.current?.emit("joinQueue");
-    socketRef.current?.on('queueJoined', (data) => {
-      console.log(data.message);
-    });
+    socketRef.current?.emit("joinQueue"); // Emit joinQueue
   };
 
   const handleQueueDisconnection = (): void => {
+    if (!socketRef.current?.connected) return;
     console.log(`Attempt to leave queue`)
-    socketRef.current?.emit("leaveQueue");
-    socketRef.current?.on('queueLeft', (data) => {
-      console.log(data.message);
-    });
+    socketRef.current?.emit("leaveQueue"); // Emit leaveQueue
   };
 
   return (
@@ -119,6 +119,11 @@ export default function Home() {
           className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]" 
           onClick={handleQueueConnection}>
             Connect
+          </button>
+
+          <button className = "flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
+          onClick={handleQueueDisconnection}>
+            Disconnect
           </button>
         </div>
       </main>
