@@ -30,7 +30,19 @@ docker compose down
 
 ## Queue coordination
 
-`src/queue.ts` uses Redis Lua scripts so membership checks and writes execute atomically. Duplicate joins preserve the original timestamp and Elo; duplicate leaves cannot report a second successful removal. Each socket's operations run in arrival order, and disconnect cleanup runs after pending writes. Leaving the queue keeps the socket connected.
+`src/queue.ts` uses Redis Lua scripts so membership checks and writes execute atomically. The sorted-set score is the queue-entry timestamp; Elo remains in player metadata. Duplicate joins preserve the original timestamp and Elo; duplicate leaves cannot report a second successful removal. Each socket's operations run in arrival order, and disconnect cleanup runs after pending writes. Leaving the queue keeps the socket connected.
+
+## Two-player lobbies
+
+After a successful `joinQueue`, the server calls the lobby manager in `src/lobby.ts`. Matchmaking takes the two longest-waiting players, removes them from the queue, and records their match assignments in one Redis script. Assigned players cannot queue again until their lobby has been released. This currently matches by waiting time only; it does not filter by Elo.
+
+The lobby manager looks up both sockets in `connectedPlayers`, joins them to the generated `match:<UUID>` room, and sends both clients `matchFound` with `{ roomId, playerIDs }`. The frontend displays the lobby in place, retaining the socket connection. No client `matchmake` event is needed.
+
+If a socket disconnects during creation or while in a lobby, the server cancels that lobby, clears its assignments and metadata, and sends the remaining player `matchCancelled`. That player can click **Join Queue** again. Room creation failures also cancel partial room membership. Lobby creation and cancellation are coordinated within this one backend process; running multiple backends will require shared presence/routing and a Socket.IO adapter.
+
+To try it, start Compose and the frontend, open two tabs, and click **Join Queue** in each. Both should display the same room ID and `Players: 2 / 2`. Closing one tab returns the other to an idle state with a cancellation message. There is no round or ready-up logic yet.
+
+When migrating a development queue previously scored by Elo, let its players leave and rejoin before testing time ordering. Changing the script does not convert previously persisted scores.
 
 Player IDs are still temporary UUIDs per connection. This handles repeated events for the same ID, not one account opening several tabs. A server crash or Redis outage can still leave stale entries; queue leases/reconciliation and authenticated session ownership are separate work. The current key layout targets the standalone Redis instance in Compose, not Redis Cluster.
 

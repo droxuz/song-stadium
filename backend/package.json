@@ -2,7 +2,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "test": "node --import tsx --test tests/queue.test.mjs",
+    "test": "node --import tsx --test tests/*.test.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -13,6 +13,7 @@
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/node": "^26.5.0",
+    "socket.io-client": "^4.8.3",
     "tsx": "^4.23.13",
     "typescript": "^7.0.2"
   }

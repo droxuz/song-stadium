@@ -1,13 +1,19 @@
 "use client"
 import Image from "next/image";
 import { io, type Socket} from 'socket.io-client';
-import {useEffect, useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
+
+type Match = { roomId: string; playerIDs: [string, string] };
+type QueueStatus = 'connecting' | 'idle' | 'queued' | 'matched' | 'disconnected';
 
 
 export default function Home() {
 
   // Creates
   const socketRef = useRef<Socket | null>(null);
+  const [status, setStatus] = useState<QueueStatus>('connecting');
+  const [match, setMatch] = useState<Match | null>(null);
+  const [message, setMessage] = useState('Connecting to the server…');
 
   // Set connection socket IO
   // Testing Connection, Error, and resets socket
@@ -16,22 +22,50 @@ export default function Home() {
     socketRef.current = socket;
     socket.on("connect", ()=>{
       console.log(`Connected to Server: ${socket.id}`)
+      setStatus('idle');
+      setMatch(null);
+      setMessage('Connected. Join the queue to find an opponent.');
     });
 
     socket.on("connect_error", (error)=>{
       console.error("Failed to connect to server:", error.message)
+      setStatus('disconnected');
+      setMessage('Cannot connect to the server. Retrying…');
     })
 
     socket.on("queueJoined", (data: { message: string }) => {
       console.log(data.message);
+      setStatus('queued');
+      setMessage('Waiting for another player…');
     });
 
     socket.on("queueLeft", (data: { message: string }) => {
       console.log(data.message);
+      setStatus('idle');
+      setMessage(data.message);
     });
 
     socket.on("queueError", (data: { message: string }) => {
       console.log(data.message);
+      setMessage(data.message);
+    });
+
+    socket.on('matchFound', (data: Match) => {
+      setMatch(data);
+      setStatus('matched');
+      setMessage('Match found! Both players have joined the lobby.');
+    });
+
+    socket.on('matchCancelled', (data: { roomId: string; message: string }) => {
+      setMatch(null);
+      setStatus('idle');
+      setMessage(data.message);
+    });
+
+    socket.on('disconnect', () => {
+      setMatch(null);
+      setStatus('disconnected');
+      setMessage('Disconnected. Reconnect before joining another queue.');
     });
 
     socket.connect();
@@ -91,6 +125,16 @@ export default function Home() {
             center.
           </p>
         </div>
+        <section className="w-full rounded-xl border border-zinc-300 p-5 dark:border-zinc-700" aria-label="Matchmaking">
+          <p role="status" aria-live="polite">{message}</p>
+          {match && (
+            <div className="mt-3">
+              <h2 className="text-lg font-semibold">Game lobby</h2>
+              <p className="break-all text-sm">Room: {match.roomId}</p>
+              <p className="text-sm">Players: {match.playerIDs.length} / 2</p>
+            </div>
+          )}
+        </section>
         <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
           <a
             className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
@@ -116,14 +160,15 @@ export default function Home() {
             Documentation
           </a>
           <button
-          className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]" 
+          disabled={status !== 'idle'}
+          className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
           onClick={handleQueueConnection}>
-            Connect
+            Join Queue
           </button>
 
-          <button className = "flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
+          <button disabled={status !== 'queued'} className = "flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
           onClick={handleQueueDisconnection}>
-            Disconnect
+            Leave Queue
           </button>
         </div>
       </main>

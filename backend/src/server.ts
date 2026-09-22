@@ -4,6 +4,7 @@ import { Server, type Socket } from 'socket.io';
 import { randomUUID } from 'node:crypto';
 import { createClient } from 'redis';
 import { createQueueStore, registerQueueHandlers } from './queue.js';
+import { createLobbyManager } from './lobby.js';
 
 const app = express();
 const server = createServer(app);
@@ -21,6 +22,7 @@ const redis = createClient({
     url: process.env.REDIS_URL ?? "redis://127.0.0.1:6379",
 });
 const queue = createQueueStore(redis);
+const lobbies = createLobbyManager(io, connectedPlayers, queue);
 
 redis.on('error', (error) => {
     console.error(`Redis Error ${error}`)
@@ -43,7 +45,7 @@ async function startServer() {
 // Matchmaker using Time spent in queue, ELO, and player name
 io.on('connection', (socket) => {
     const playerID = randomUUID(); // Temporary guest identity for this connection.
-    const elo = 150 // database value
+    const elo = 150 // Will be from database that holds ELO
     connectedPlayers.set(playerID, socket)// Creates map element of key playerID, value socket
     console.log(`Player Connected: ${socket.id}`);
     socket.on('disconnect', () =>{  
@@ -53,24 +55,17 @@ io.on('connection', (socket) => {
         }
     });
 
-    registerQueueHandlers(socket, playerID, elo, queue);
+    registerQueueHandlers(socket, playerID, elo, queue, {
+        onQueued: lobbies.matchWaitingPlayers,
+        onDisconnected: lobbies.playerDisconnected,
+    });
 });
-
-
-// Starts the server 
-// Redis on port 6379
-// Server on port 3001
 
 startServer().catch((error) => {
     console.error(`Error: ${error}`);
     process.exit(1)
 });
 
-
-
-// So based upon any abitrary number of songs for users to guess, 
-// Create a package of song that the server can then divy out to clients 
-// The server will then only accept answer from the client and then check answer and respond accordingly
 
 
 
