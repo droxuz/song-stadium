@@ -59,7 +59,6 @@ export function startRound(game: GameState, songId: string, roundDuration: numbe
     for (const player of Object.values(game.players)) {
         player.clueIndex = 0;
         player.finishedRound = false;
-        // Keep the player's accumulated score across rounds.
     }
 
     // Safe to send to players: the correct song stays on the server.
@@ -76,7 +75,6 @@ export function finishRound(game: GameState, roundNumber: number) {
         return { accepted: false } as const;
     }
 
-    // Entering reveal prevents duplicate finishes and further guesses.
     game.roundPhase = "reveal";
     for (const player of Object.values(game.players)) {
         player.finishedRound = true;
@@ -103,7 +101,6 @@ export function submitGuess(game: GameState, playerID: string, song: string, rou
         skipClue(game, playerID, roundNumber);
         return { accepted: true, correct: false, score: 0 };
     }
-    // 500 max points per round, 5 rounds total: 2500.
     const score = Math.round(500 * clueIndex[player.clueIndex]!.multiplier);
     player.score += score;
     player.finishedRound = true;

@@ -1,7 +1,8 @@
 "use client"
 import Image from "next/image";
-import { io, type Socket} from 'socket.io-client';
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useState} from 'react';
+import { useSocket } from './SocketProvider';
+import { useRouter } from "next/navigation";
 
 type Match = { roomId: string; playerIDs: [string, string] };
 type QueueStatus = 'connecting' | 'idle' | 'queued' | 'matched' | 'disconnected';
@@ -9,83 +10,98 @@ type QueueStatus = 'connecting' | 'idle' | 'queued' | 'matched' | 'disconnected'
 
 export default function Home() {
 
-  // Creates
-  const socketRef = useRef<Socket | null>(null);
+  const socket = useSocket();
+  const router = useRouter();
   const [status, setStatus] = useState<QueueStatus>('connecting');
   const [match, setMatch] = useState<Match | null>(null);
   const [message, setMessage] = useState('Connecting to the server…');
 
-  // Set connection socket IO
-  // Testing Connection, Error, and resets socket
+  // Subscribe to the shared socket without owning its connection lifecycle.
   useEffect(() => {
-    const socket = io("http://localhost:3001", {autoConnect: false,});// Placeholder
-    socketRef.current = socket;
-    socket.on("connect", ()=>{
+    if (!socket) return;
+
+    const onConnect = () => {
       console.log(`Connected to Server: ${socket.id}`)
       setStatus('idle');
       setMatch(null);
       setMessage('Connected. Join the queue to find an opponent.');
-    });
+    };
 
-    socket.on("connect_error", (error)=>{
+    const onConnectError = (error: Error) => {
       console.error("Failed to connect to server:", error.message)
       setStatus('disconnected');
       setMessage('Cannot connect to the server. Retrying…');
-    })
+    };
 
-    socket.on("queueJoined", (data: { message: string }) => {
+    const onQueueJoined = (data: { message: string }) => {
       console.log(data.message);
       setStatus('queued');
       setMessage('Waiting for another player…');
-    });
+    };
 
-    socket.on("queueLeft", (data: { message: string }) => {
+    const onQueueLeft = (data: { message: string }) => {
       console.log(data.message);
       setStatus('idle');
       setMessage(data.message);
-    });
+    };
 
-    socket.on("queueError", (data: { message: string }) => {
+    const onQueueError = (data: { message: string }) => {
       console.log(data.message);
       setMessage(data.message);
-    });
+    };
 
-    socket.on('matchFound', (data: Match) => {
+    const onMatchFound = (data: Match) => {
       setMatch(data);
       setStatus('matched');
+      router.push(`/game/${encodeURIComponent(data.roomId)}`);
       setMessage('Match found! Both players have joined the lobby.');
-    });
+    };
 
-    socket.on('matchCancelled', (data: { roomId: string; message: string }) => {
+    const onMatchCancelled = (data: { roomId: string; message: string }) => {
       setMatch(null);
       setStatus('idle');
       setMessage(data.message);
-    });
+    };
 
-    socket.on('disconnect', () => {
+    const onDisconnect = () => {
       setMatch(null);
       setStatus('disconnected');
       setMessage('Disconnected. Reconnect before joining another queue.');
-    });
+    };
 
-    socket.connect();
+    socket.on('connect', onConnect);
+    socket.on('connect_error', onConnectError);
+    socket.on('queueJoined', onQueueJoined);
+    socket.on('queueLeft', onQueueLeft);
+    socket.on('queueError', onQueueError);
+    socket.on('matchFound', onMatchFound);
+    socket.on('matchCancelled', onMatchCancelled);
+    socket.on('disconnect', onDisconnect);
+
+    if (socket.connected) onConnect();
+
     return() => {
-      socket.disconnect();
-      socket.removeAllListeners();
-      socketRef.current = null;
+      socket.off('connect', onConnect);
+      socket.off('connect_error', onConnectError);
+      socket.off('queueJoined', onQueueJoined);
+      socket.off('queueLeft', onQueueLeft);
+      socket.off('queueError', onQueueError);
+      socket.off('matchFound', onMatchFound);
+      socket.off('matchCancelled', onMatchCancelled);
+      socket.off('disconnect', onDisconnect);
     }
-  }, []);
+  }, [socket]);
 
   const handleQueueConnection = (): void => {
-    if (!socketRef.current?.connected) return;
+    if (!socket?.connected) return;
     console.log(`Attempt to join queue`)
-    socketRef.current?.emit("joinQueue"); // Emit joinQueue
+    socket.emit("joinQueue"); // Emit joinQueue
   };
 
   const handleQueueDisconnection = (): void => {
-    if (!socketRef.current?.connected) return;
+    if (!socket?.connected) return;
     console.log(`Attempt to leave queue`)
-    socketRef.current?.emit("leaveQueue"); // Emit leaveQueue
+    socket.emit("leaveQueue"); // Emit leaveQueue
   };
 
   return (

@@ -5,6 +5,7 @@ import { randomUUID } from 'node:crypto';
 import { createClient } from 'redis';
 import { createQueueStore, registerQueueHandlers } from './queue.js';
 import { createLobbyManager } from './lobby.js';
+import { createGameState, startRound, finishRound, submitGuess, skipClue } from './game.js';
 
 const app = express();
 const server = createServer(app);
