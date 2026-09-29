@@ -5,6 +5,10 @@ export function createLobbyManager(
     io: Server,
     connectedPlayers: Map<string, Socket>,
     queue: QueueStore,
+    lifecycle: {
+        onCreated?: (match: Match) => void;
+        onCancelled?: (match: Match) => void;
+    } = {},
 ) {
     let pending = Promise.resolve();
     function schedule(work: () => Promise<void>): Promise<void> {
@@ -14,6 +18,7 @@ export function createLobbyManager(
     }
 
     async function cancelMatch(match: Match, message: string) {
+        lifecycle.onCancelled?.(match);
         const players = match.playerIDs.map(id => connectedPlayers.get(id));
         await Promise.all(players.map(socket => socket?.leave(match.roomId)));
         if (await queue.releaseMatch(match)) {
@@ -48,6 +53,7 @@ export function createLobbyManager(
                 return;
             }
 
+            lifecycle.onCreated?.(match);
             io.to(match.roomId).emit('matchFound', match);
             console.log(`Lobby created: ${match.roomId}`);
         } catch (error) {

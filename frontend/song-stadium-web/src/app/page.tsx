@@ -90,7 +90,7 @@ export default function Home() {
       socket.off('matchCancelled', onMatchCancelled);
       socket.off('disconnect', onDisconnect);
     }
-  }, [socket]);
+  }, [socket, router]);
 
   const handleQueueConnection = (): void => {
     if (!socket?.connected) return;

@@ -5,12 +5,15 @@ import { randomUUID } from 'node:crypto';
 import { createClient } from 'redis';
 import { createQueueStore, registerQueueHandlers } from './queue.js';
 import { createLobbyManager } from './lobby.js';
-import { createGameState, startRound, finishRound, submitGuess, skipClue } from './game.js';
+import { createGameManager } from './game-session.js';
 
 const app = express();
 const server = createServer(app);
 const PORT = 3001;
 const connectedPlayers = new Map<string, Socket>();
+const songId = "song-1"; // Placeholder for now
+const roundDuration = 60 * 1000; // Duration 
+const games = createGameManager(connectedPlayers, () => songId, roundDuration);
 
 // Creates URLs to listen to
 const io = new Server(server, {
@@ -23,7 +26,10 @@ const redis = createClient({
     url: process.env.REDIS_URL ?? "redis://127.0.0.1:6379",
 });
 const queue = createQueueStore(redis);
-const lobbies = createLobbyManager(io, connectedPlayers, queue);
+const lobbies = createLobbyManager(io, connectedPlayers, queue, {
+    onCreated: games.startMatch,
+    onCancelled: games.removeMatch,
+});
 
 redis.on('error', (error) => {
     console.error(`Redis Error ${error}`)
@@ -60,6 +66,9 @@ io.on('connection', (socket) => {
         onQueued: lobbies.matchWaitingPlayers,
         onDisconnected: lobbies.playerDisconnected,
     });
+
+    games.registerHandlers(socket, playerID);
+
 });
 
 startServer().catch((error) => {
