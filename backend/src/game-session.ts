@@ -1,5 +1,7 @@
 import type { Socket } from 'socket.io';
 import type { Match } from './queue.js';
+import { readFile } from 'node:fs/promises';
+import { randomInt } from 'node:crypto';
 import {
     createGameState, finishRound, getPlayerView, skipClue, startRound, submitGuess,
     type GameState,
@@ -10,9 +12,27 @@ function isPayload(value: unknown): value is Payload {
     return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
+interface Song {
+    "song-id": number,
+    "song-name": string,
+    "song-link": string
+}
+const songs: Song[] = JSON.parse(await readFile(
+    new URL("../music/music-stub.json", import.meta.url), "utf-8",
+));
+const songIDs = [...new Set(songs.map(song => String(song["song-id"])))];
+if (songIDs.length < 2) {
+    throw new Error("The catalog needs at least two distinct songs to change songs each round.");
+}
+
+export function selectSongFromCatalog(_roundNumber: number, previousSongId?: string): string {
+    const candidates = songIDs.filter(id => id !== previousSongId);
+    return candidates[randomInt(candidates.length)]!;
+}
+
 export function createGameManager(
     connectedPlayers: Map<string, Socket>,
-    selectSong: (roundNumber: number) => string,
+    selectSong: (roundNumber: number, previousSongId?: string) => string = selectSongFromCatalog,
     roundDuration = 60_000,
     revealDuration = 3_000,
 ) {
@@ -62,7 +82,8 @@ export function createGameManager(
         const timer = setTimeout(() => {
             if (games.get(game.roomId) !== game) return;
             try {
-                startRound(game, selectSong(game.roundNumber + 1), roundDuration);
+                const nextSongId = selectSong(game.roundNumber + 1, game.correctSongId);
+                startRound(game, nextSongId, roundDuration);
                 scheduleDeadline(game);
             } catch (error) {
                 console.error('Could not start the next round:', error);

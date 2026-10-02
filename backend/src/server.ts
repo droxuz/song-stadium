@@ -11,9 +11,8 @@ const app = express();
 const server = createServer(app);
 const PORT = 3001;
 const connectedPlayers = new Map<string, Socket>();
-const songId = "song-1"; // Placeholder for now
 const roundDuration = 60 * 1000; // Duration 
-const games = createGameManager(connectedPlayers, () => songId, roundDuration);
+const games = createGameManager(connectedPlayers, undefined, roundDuration);
 
 // Creates URLs to listen to
 const io = new Server(server, {

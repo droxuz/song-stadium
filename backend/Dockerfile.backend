@@ -15,6 +15,7 @@ ENV NODE_ENV=production
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev && npm cache clean --force
 COPY --from=build --chown=node:node /app/dist ./dist
+COPY --chown=node:node music/music-stub.json ./music/music-stub.json
 
 USER node
 EXPOSE 3001

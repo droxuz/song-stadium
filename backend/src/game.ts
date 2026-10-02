@@ -15,7 +15,7 @@ export interface GameState {
     }>;
 };
 
-const TOTAL_ROUNDS = 5;
+export const TOTAL_ROUNDS = 2;
 
 const clueIndex = [
     {seconds: 0.1, multiplier: 1.0},

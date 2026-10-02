@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { createGameState, startRound, finishRound, submitGuess, skipClue } from '../src/game.ts';
+import { createGameState, startRound, finishRound, submitGuess, skipClue, TOTAL_ROUNDS } from '../src/game.ts';
 
 const createGame = (room = 'room-A') => createGameState(room, ['a', 'b'], 'song-1', 30_000);
 
@@ -32,7 +32,7 @@ test('wrong guesses and skips do not reset speed bonus; next round does', t => {
     now += 5_000;
     const result = submitGuess(game, 'a', 'song-1', 1);
     assert.equal(result.timeMultiplier, 1.5);
-    assert.equal(result.score, 600); // 500 × 0.8 × 1.5
+    assert.equal(result.score, 450); // 500 × 0.6 × 1.5 (wrong guess, then skip)
     submitGuess(game, 'b', 'song-1', 1);
     finishRound(game, 1);
     now += 3_000;
@@ -61,8 +61,7 @@ test('round transitions preserve scores and reset progress', t => {
     assert.equal(startRound(game, 'song-2', 30_000).accepted, false);
     assert.equal(finishRound(game, 1).accepted, false);
     assert.deepEqual(submitGuess(game, 'a', 'wrong', 1), { accepted: true, correct: false, score: 0 });
-    // Wrong guesses currently preserve the clue; an explicit skip advances it.
-    skipClue(game, 'a', 1);
+    // The incorrect guess advances to the second clue.
     assert.equal(submitGuess(game, 'a', 'song-1', 1).score, 800);
     assert.equal(finishRound(game, 1).accepted, false);
     assert.equal(submitGuess(game, 'b', 'song-1', 1).score, 1000);
@@ -113,18 +112,18 @@ test('deadline closes a round with no guesses and rejects late actions', t => {
     assert.equal(game.players.a.score, 0);
 });
 
-test('five rounds finish the match with cumulative scores', t => {
+test('configured rounds finish the match with cumulative scores', t => {
     t.mock.method(Date, 'now', () => 1_000_000);
     const game = createGame();
-    for (let round = 1; round <= 5; round++) {
+    for (let round = 1; round <= TOTAL_ROUNDS; round++) {
         for (const player of ['a', 'b']) submitGuess(game, player, game.correctSongId, round);
-        assert.equal(finishRound(game, round).matchFinished, round === 5);
-        if (round < 5) assert.equal(startRound(game, `song-${round + 1}`, 30_000).accepted, true);
+        assert.equal(finishRound(game, round).matchFinished, round === TOTAL_ROUNDS);
+        if (round < TOTAL_ROUNDS) assert.equal(startRound(game, `song-${round + 1}`, 30_000).accepted, true);
     }
-    assert.equal(game.players.a.score, 5000);
+    assert.equal(game.players.a.score, 1000 * TOTAL_ROUNDS);
     assert.equal(game.status, 'finished');
     assert.equal(startRound(game, 'song-6', 30_000).accepted, false);
-    assert.equal(finishRound(game, 5).accepted, false);
+    assert.equal(finishRound(game, TOTAL_ROUNDS).accepted, false);
 });
 
 test('lobbies maintain independent scores and round progress', () => {

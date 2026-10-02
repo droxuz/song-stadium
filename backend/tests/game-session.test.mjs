@@ -3,8 +3,9 @@ import { createServer } from 'node:http';
 import { test } from 'node:test';
 import { Server } from 'socket.io';
 import { io as connectClient } from 'socket.io-client';
-import { createGameManager } from '../src/game-session.ts';
-import { createGameState, getPlayerView } from '../src/game.ts';
+import { createGameManager, selectSongFromCatalog } from '../src/game-session.ts';
+import { readFile } from 'node:fs/promises';
+import { createGameState, getPlayerView, TOTAL_ROUNDS } from '../src/game.ts';
 import { createLobbyManager } from '../src/lobby.ts';
 
 function nextEvent(socket, event) {
@@ -24,7 +25,7 @@ async function setup(t, options = {}) {
     const players = new Map();
     const clients = [];
     const manager = createGameManager(
-        players, round => `secret-song-${round}`,
+        players, options.selectSong ?? (round => `secret-song-${round}`),
         options.duration ?? 60_000, options.revealDuration ?? 3_000,
     );
     io.on('connection', socket => {
@@ -131,7 +132,7 @@ test('malformed, stale, and foreign-room actions cannot advance a player', async
     assert.equal(wrong.correct, false);
     const first = await request(app.first, 'getGameState', { roomId: 'room-A' }, 'gameState');
     const second = await request(app.second, 'getGameState', { roomId: 'room-A' }, 'gameState');
-    assert.equal(first.clueIndex, 0);
+    assert.equal(first.clueIndex, 1);
     assert.equal(second.clueIndex, 0);
 });
 
@@ -184,18 +185,25 @@ test('lobby lifecycle starts a private game and cancellation removes it', async 
     assert.ok((await request(app.first, 'getGameState', { roomId: 'room-A' }, 'gameError')).message);
 });
 
-test('the server advances all five rounds and stops at the final result', async t => {
-    const app = await setup(t, { revealDuration: 10 });
+test('the server selects a new song each round and stops at the final result', async t => {
+    const selections = [];
+    const app = await setup(t, {
+        revealDuration: 10,
+        selectSong(round, previousSongId) {
+            selections.push([round, previousSongId]);
+            return `secret-song-${round}`;
+        },
+    });
     let expectedScore = 0;
-    for (let round = 1; round <= 5; round++) {
+    for (let round = 1; round <= TOTAL_ROUNDS; round++) {
         const transition = new Promise((resolve, reject) => {
             const timeout = setTimeout(() => {
                 app.first.off('gameState', receive);
                 reject(new Error('Round did not transition'));
             }, 3000);
             function receive(view) {
-                if ((round < 5 && view.roundNumber === round + 1 && view.roundPhase === 'guessing') ||
-                    (round === 5 && view.status === 'finished')) {
+                if ((round < TOTAL_ROUNDS && view.roundNumber === round + 1 && view.roundPhase === 'guessing') ||
+                    (round === TOTAL_ROUNDS && view.status === 'finished')) {
                     clearTimeout(timeout);
                     app.first.off('gameState', receive);
                     resolve(view);
@@ -213,6 +221,26 @@ test('the server advances all five rounds and stops at the final result', async 
         const view = await transition;
         assert.equal(view.scores['player-1'], expectedScore);
         assert.equal(JSON.stringify(view).includes('secret-song'), false);
+    }
+    assert.deepEqual(selections, Array.from({ length: TOTAL_ROUNDS }, (_, index) => [
+        index + 1, index === 0 ? undefined : `secret-song-${index}`,
+    ]));
+});
+
+test('random selection stays in the catalog and excludes each game\'s previous song', async () => {
+    const catalog = JSON.parse(await readFile(new URL('../music/music-stub.json', import.meta.url), 'utf8'));
+    const ids = new Set(catalog.map(song => String(song['song-id'])));
+    let firstGamePrevious;
+    let secondGamePrevious;
+    for (let round = 1; round <= 20; round++) {
+        const first = selectSongFromCatalog(round, firstGamePrevious);
+        const second = selectSongFromCatalog(round, secondGamePrevious);
+        assert.ok(ids.has(first));
+        assert.ok(ids.has(second));
+        assert.notEqual(first, firstGamePrevious);
+        assert.notEqual(second, secondGamePrevious);
+        firstGamePrevious = first;
+        secondGamePrevious = second;
     }
 });
 
