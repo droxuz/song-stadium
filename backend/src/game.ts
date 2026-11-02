@@ -1,5 +1,3 @@
-import { skip } from "node:test";
-
 export interface GameState {
     roomId: string;
     status: "playing" | "finished";
@@ -17,13 +15,13 @@ export interface GameState {
 
 export const TOTAL_ROUNDS = 2;
 
-const clueIndex = [
+export const CLUES = [
     {seconds: 0.1, multiplier: 1.0},
     {seconds: 0.2, multiplier: 0.80},
     {seconds: 0.5, multiplier: 0.6},
     {seconds: 1, multiplier: 0.4},
     {seconds: 5, multiplier: 0.2}
-]
+] as const;
 
 // Explicitly select public fields. Never serialize the full GameState to a client.
 export function getPlayerView(game: GameState, playerID: string) {
@@ -37,7 +35,7 @@ export function getPlayerView(game: GameState, playerID: string) {
         roundEndsAt: game.roundEndsAt,
         playerID,
         clueIndex: player.clueIndex,
-        clueSeconds: clueIndex[player.clueIndex]!.seconds,
+        clueSeconds: CLUES[player.clueIndex]!.seconds,
         finishedRound: player.finishedRound,
         scores: Object.fromEntries(
             Object.entries(game.players).map(([id, state]) => [id, state.score]),
@@ -133,7 +131,7 @@ export function submitGuess(game: GameState, playerID: string, song: string, rou
     const duration = game.roundEndsAt - game.roundStartedAt;
     const remainingFraction = Math.max(0, Math.min(1, (game.roundEndsAt - now) / duration));
     const timeMultiplier = 1 + remainingFraction;
-    const score = Math.round(500 * clueIndex[player.clueIndex]!.multiplier * timeMultiplier);
+    const score = Math.round(500 * CLUES[player.clueIndex]!.multiplier * timeMultiplier);
     player.score += score;
     player.finishedRound = true;
     return { accepted: true, correct: true, score, timeMultiplier };
@@ -146,7 +144,7 @@ export function skipClue(game: GameState, playerID: string, roundNumber: number)
     if (!player || game.status !== "playing" || game.roundPhase !== "guessing" || game.roundNumber !== roundNumber || Date.now() >= game.roundEndsAt || player.finishedRound) {
         return { accepted: false } as const;
     }
-    if (player.clueIndex < clueIndex.length - 1) {
+    if (player.clueIndex < CLUES.length - 1) {
         player.clueIndex++;
     } else {
         player.finishedRound = true;

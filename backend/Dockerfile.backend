@@ -15,7 +15,11 @@ ENV NODE_ENV=production
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev && npm cache clean --force
 COPY --from=build --chown=node:node /app/dist ./dist
-COPY --chown=node:node music/music-stub.json ./music/music-stub.json
+COPY --chown=node:node music ./music
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
 
 USER node
 EXPOSE 3001

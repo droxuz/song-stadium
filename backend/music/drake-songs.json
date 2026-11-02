@@ -1,0 +1,2089 @@
+{
+  "artist": "Drake",
+  "source": "https://music.apple.com/ca/artist/drake/271256",
+  "sourceApi": "https://itunes.apple.com/lookup?id=271256&entity=album&limit=200&country=CA",
+  "retrievedAt": "2026-11-02",
+  "scope": "Distinct song titles credited to Drake from up to 200 Canadian Apple catalog releases, including collaborations and featured appearances returned by the lookup. Regional availability and lookup limits apply; not a guarantee of every unreleased or unofficial recording.",
+  "songs": [
+    {
+      "id": "drake:0-to-100-the-catch-up",
+      "title": "0 To 100 / The Catch Up",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:10-bands",
+      "title": "10 Bands",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:100",
+      "title": "100",
+      "artist": "The Game"
+    },
+    {
+      "id": "drake:2-hard-4-the-radio",
+      "title": "2 Hard 4 The Radio",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:30-for-30-freestyle",
+      "title": "30 for 30 Freestyle",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:305-to-my-city",
+      "title": "305 To My City",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:4422",
+      "title": "4422",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:4pm-in-calabasas",
+      "title": "4pm in Calabasas",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:5-am-in-toronto",
+      "title": "5 Am in Toronto",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:6-god",
+      "title": "6 God",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:6-man",
+      "title": "6 Man",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:6pm-in-new-york",
+      "title": "6PM In New York",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:7969-santa",
+      "title": "7969 Santa",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:7am-on-bridle-path",
+      "title": "7am On Bridle Path",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:8-out-of-10",
+      "title": "8 Out Of 10",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:8am-in-charlotte",
+      "title": "8am in Charlotte",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:9",
+      "title": "9",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:9am-in-dallas",
+      "title": "9AM In Dallas",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:a-keeper",
+      "title": "A Keeper",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:a-night-off",
+      "title": "A Night Off",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:act-ii-date-8-remix",
+      "title": "act ii: date @ 8 (remix)",
+      "artist": "4batz & Drake"
+    },
+    {
+      "id": "drake:after-dark",
+      "title": "After Dark",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:all-me",
+      "title": "All Me",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:all-the-parties",
+      "title": "All The Parties",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:amazing-shape",
+      "title": "Amazing Shape",
+      "artist": "Drake & Popcaan"
+    },
+    {
+      "id": "drake:amen",
+      "title": "Amen",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:another-late-night",
+      "title": "Another Late Night",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:away-from-home",
+      "title": "Away From Home",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:b-b-king-freestyle",
+      "title": "B.B. King Freestyle",
+      "artist": "Lil Wayne"
+    },
+    {
+      "id": "drake:b-s-on-the-table",
+      "title": "B’s On The Table",
+      "artist": "Drake & 21 Savage"
+    },
+    {
+      "id": "drake:back-to-back",
+      "title": "Back To Back",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:backoutsideboyz",
+      "title": "BackOutsideBoyz",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:bahamas-promises",
+      "title": "Bahamas Promises",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:bbl-love-interlude",
+      "title": "BBL Love (Interlude)",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:bbw",
+      "title": "BBW",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:believe-me",
+      "title": "Believe Me",
+      "artist": "Lil Wayne"
+    },
+    {
+      "id": "drake:best-i-ever-had",
+      "title": "Best I Ever Had",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:big-rings",
+      "title": "Big Rings",
+      "artist": "Drake & Future"
+    },
+    {
+      "id": "drake:bigger-than-you",
+      "title": "Bigger Than You",
+      "artist": "2 Chainz"
+    },
+    {
+      "id": "drake:blem",
+      "title": "Blem",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:blessings-extended-version",
+      "title": "Blessings (Extended Version)",
+      "artist": "Big Sean"
+    },
+    {
+      "id": "drake:blue-tint",
+      "title": "Blue Tint",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:both-remix",
+      "title": "Both (Remix)",
+      "artist": "Gucci Mane"
+    },
+    {
+      "id": "drake:brand-new",
+      "title": "Brand New",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:bria-s-interlude",
+      "title": "Bria's Interlude",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:broke-boys",
+      "title": "Broke Boys",
+      "artist": "Drake & 21 Savage"
+    },
+    {
+      "id": "drake:buried-alive-interlude",
+      "title": "Buried Alive Interlude",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:burning-bridges",
+      "title": "Burning Bridges",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:calling-for-you",
+      "title": "Calling For You",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:calling-my-name",
+      "title": "Calling My Name",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:cameras-good-ones-go-interlude",
+      "title": "Cameras / Good Ones Go Interlude",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:can-i",
+      "title": "Can I",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:can-t-have-everything",
+      "title": "Can't Have Everything",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:can-t-take-a-joke",
+      "title": "Can’t Take A Joke",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:cece-s-interlude",
+      "title": "Cece's Interlude",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:champagne-poetry",
+      "title": "Champagne Poetry",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:change-locations",
+      "title": "Change Locations",
+      "artist": "Drake & Future"
+    },
+    {
+      "id": "drake:charged-up",
+      "title": "Charged Up",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:cheetah-print",
+      "title": "Cheetah Print",
+      "artist": "Drake & Sexyy Red"
+    },
+    {
+      "id": "drake:chicago-freestyle",
+      "title": "Chicago Freestyle",
+      "artist": "Drake & GIVĒON"
+    },
+    {
+      "id": "drake:childs-play",
+      "title": "Childs Play",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:circadian-rhythm",
+      "title": "Circadian Rhythm",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:circo-loco",
+      "title": "Circo Loco",
+      "artist": "Drake & 21 Savage"
+    },
+    {
+      "id": "drake:classic",
+      "title": "Classic",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:classic-pt2",
+      "title": "Classic PT2",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:club-paradise",
+      "title": "Club Paradise",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:cold-shoulder",
+      "title": "Cold Shoulder",
+      "artist": "Drake, Don Toliver & Yebba"
+    },
+    {
+      "id": "drake:come-and-see-me",
+      "title": "Come and See Me",
+      "artist": "PARTYNEXTDOOR & Drake"
+    },
+    {
+      "id": "drake:come-closer",
+      "title": "Come Closer",
+      "artist": "Wizkid"
+    },
+    {
+      "id": "drake:come-thru",
+      "title": "Come Thru",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:company",
+      "title": "Company",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:congratulations",
+      "title": "Congratulations",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:connect",
+      "title": "Connect",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:controlla",
+      "title": "Controlla",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:crew-love",
+      "title": "Crew Love",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:currents",
+      "title": "Currents",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:d4l",
+      "title": "D4L",
+      "artist": "Future, Drake & Young Thug"
+    },
+    {
+      "id": "drake:daylight",
+      "title": "Daylight",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:days-in-the-east",
+      "title": "Days in the East",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:deep-pockets",
+      "title": "Deep Pockets",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:demons",
+      "title": "Demons",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:desires",
+      "title": "Desires",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:diamonds-dancing",
+      "title": "Diamonds Dancing",
+      "artist": "Drake & Future"
+    },
+    {
+      "id": "drake:digital-dash",
+      "title": "Digital Dash",
+      "artist": "Drake & Future"
+    },
+    {
+      "id": "drake:digital-girl-remix",
+      "title": "Digital Girl (Remix)",
+      "artist": "Jamie Foxx"
+    },
+    {
+      "id": "drake:digital-girl-remix-remix-instrumental",
+      "title": "Digital Girl Remix [Remix Instrumental]",
+      "artist": "Jamie Foxx"
+    },
+    {
+      "id": "drake:digital-girl-remix-west-coast-remix",
+      "title": "Digital Girl Remix [West Coast Remix]",
+      "artist": "Jamie Foxx"
+    },
+    {
+      "id": "drake:diplomatic-immunity",
+      "title": "Diplomatic Immunity",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:do-not-disturb",
+      "title": "Do Not Disturb",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:dog-house",
+      "title": "DOG HOUSE",
+      "artist": "Drake, Julia Wolf & Yeat"
+    },
+    {
+      "id": "drake:doing-it-wrong",
+      "title": "Doing It Wrong",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:don-t-matter-to-me",
+      "title": "Don’t Matter To Me",
+      "artist": "Drake & Michael Jackson"
+    },
+    {
+      "id": "drake:don-t-worry",
+      "title": "Don’t Worry",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:down-hill",
+      "title": "Down Hill",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:draft-day",
+      "title": "Draft Day",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:dreams-money-can-buy",
+      "title": "Dreams Money Can Buy",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:drew-a-picasso",
+      "title": "Drew A Picasso",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:dust",
+      "title": "Dust",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:elevate",
+      "title": "Elevate",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:emotionless",
+      "title": "Emotionless",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:energy",
+      "title": "Energy",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:evil-ways",
+      "title": "Evil Ways",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:evil-ways-instrumental",
+      "title": "Evil Ways [Instrumental]",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:f-g-fans",
+      "title": "F*****g Fans",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:fair-trade",
+      "title": "Fair Trade",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:faithful",
+      "title": "Faithful",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:fake-love",
+      "title": "Fake Love",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:fall-for-your-type",
+      "title": "Fall for Your Type",
+      "artist": "Jamie Foxx"
+    },
+    {
+      "id": "drake:falling-back",
+      "title": "Falling Back",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:family-matters",
+      "title": "Family Matters",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:fancy",
+      "title": "Fancy",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:fear",
+      "title": "Fear",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:fear-of-heights",
+      "title": "Fear Of Heights",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:feel-no-ways",
+      "title": "Feel No Ways",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:final-fantasy",
+      "title": "Final Fantasy",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:find-your-love",
+      "title": "Find Your Love",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:finesse",
+      "title": "Finesse",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:fire-desire",
+      "title": "Fire & Desire",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:fireworks",
+      "title": "Fireworks",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:firm-friends",
+      "title": "Firm Friends",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:first-person-shooter",
+      "title": "First Person Shooter",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:flight-s-booked",
+      "title": "Flight's Booked",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:for-free",
+      "title": "For Free",
+      "artist": "DJ Khaled"
+    },
+    {
+      "id": "drake:forever",
+      "title": "Forever",
+      "artist": "Drake, Kanye West, Lil Wayne & Eminem"
+    },
+    {
+      "id": "drake:fortworth",
+      "title": "Fortworth",
+      "artist": "Drake & PARTYNEXTDOOR"
+    },
+    {
+      "id": "drake:fountains",
+      "title": "Fountains",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:free-smoke",
+      "title": "Free Smoke",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:free-spirit",
+      "title": "Free Spirit",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:from-florida-with-love",
+      "title": "From Florida With Love",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:from-time",
+      "title": "From Time",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:furthest-thing",
+      "title": "Furthest Thing",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:gen-5",
+      "title": "Gen 5",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:gently",
+      "title": "Gently",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:get-along-better",
+      "title": "Get Along Better",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:get-it-together",
+      "title": "Get It Together",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:gift",
+      "title": "Gift",
+      "artist": "Babylon"
+    },
+    {
+      "id": "drake:gift2-piano-remix",
+      "title": "Gift2 [Piano remix]",
+      "artist": "Babylon"
+    },
+    {
+      "id": "drake:girls-love-beyonce",
+      "title": "Girls Love Beyoncé",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:girls-need-love-remix",
+      "title": "Girls Need Love (Remix)",
+      "artist": "Summer Walker & Drake"
+    },
+    {
+      "id": "drake:girls-want-girls",
+      "title": "Girls Want Girls",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:glow",
+      "title": "Glow",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:god-s-plan",
+      "title": "God's Plan",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:gold-roses",
+      "title": "Gold Roses",
+      "artist": "Rick Ross"
+    },
+    {
+      "id": "drake:goose-and-the-juice",
+      "title": "Goose and The Juice",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:grammys",
+      "title": "Grammys",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:greece",
+      "title": "GREECE",
+      "artist": "DJ Khaled"
+    },
+    {
+      "id": "drake:grindin",
+      "title": "Grindin'",
+      "artist": "Lil Wayne"
+    },
+    {
+      "id": "drake:gyalchester",
+      "title": "Gyalchester",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:hate-sleeping-alone-bonus-track",
+      "title": "Hate Sleeping Alone (Bonus Track)",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:headlines",
+      "title": "Headlines",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:heat-of-the-moment",
+      "title": "Heat of the Moment",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:high-fives",
+      "title": "High Fives",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:hoe-phase",
+      "title": "Hoe Phase",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:hold-on-we-re-going-home",
+      "title": "Hold On, We're Going Home",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:hotline-bling",
+      "title": "Hotline Bling",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:hours-in-silence",
+      "title": "Hours In Silence",
+      "artist": "Drake & 21 Savage"
+    },
+    {
+      "id": "drake:housekeeping-knows",
+      "title": "Housekeeping Knows",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:houstatlantavegas",
+      "title": "Houstatlantavegas",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:how-bout-now",
+      "title": "How Bout Now",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:hurrr-nor-thurrr",
+      "title": "Hurrr Nor Thurrr",
+      "artist": "Drake & Sexyy Red"
+    },
+    {
+      "id": "drake:hyfr-hell-ya-f-ing-right",
+      "title": "HYFR (Hell Ya F***ing Right)",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:hyfr-hell-ya-fucking-right",
+      "title": "HYFR (Hell Ya Fucking Right)",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:hype",
+      "title": "Hype",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:i-get-lonely",
+      "title": "I Get Lonely",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:i-guess-it-s-fuck-me",
+      "title": "I Guess It’s Fuck Me",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:i-m-goin-in",
+      "title": "I'm Goin In",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:i-m-spent",
+      "title": "I’m Spent",
+      "artist": "Drake & Loe Shimmy"
+    },
+    {
+      "id": "drake:i-m-still-fly",
+      "title": "I'm Still Fly",
+      "artist": "Page"
+    },
+    {
+      "id": "drake:i-m-still-fly-acapella",
+      "title": "I'm Still Fly [Acapella]",
+      "artist": "Page"
+    },
+    {
+      "id": "drake:i-m-still-fly-instrumental",
+      "title": "I'm Still Fly [Instrumental]",
+      "artist": "Page"
+    },
+    {
+      "id": "drake:i-m-the-plug",
+      "title": "I'm the Plug",
+      "artist": "Drake & Future"
+    },
+    {
+      "id": "drake:i-m-upset",
+      "title": "I'm Upset",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:ice-melts",
+      "title": "Ice Melts",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:idgaf",
+      "title": "IDGAF",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:ignant-shit",
+      "title": "Ignant Shit",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:im-on-one-remix",
+      "title": "Im On One [Remix]",
+      "artist": "Kigity K"
+    },
+    {
+      "id": "drake:imy2",
+      "title": "IMY2",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:in-my-feelings",
+      "title": "In My Feelings",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:in-the-bible",
+      "title": "In The Bible",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:intro",
+      "title": "Intro",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:is-there-more",
+      "title": "Is There More",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:it-s-up",
+      "title": "It’s Up",
+      "artist": "Drake, Young Thug & 21 Savage"
+    },
+    {
+      "id": "drake:jaded",
+      "title": "Jaded",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:janice-stfu",
+      "title": "Janice STFU",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:jimmy-cooks",
+      "title": "Jimmy Cooks",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:jodeci-freestyle",
+      "title": "Jodeci Freestyle",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:jorja-interlude",
+      "title": "Jorja Interlude",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:jumbotron-shit-poppin",
+      "title": "Jumbotron Shit Poppin",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:jumpman",
+      "title": "Jumpman",
+      "artist": "Drake & Future"
+    },
+    {
+      "id": "drake:jungle",
+      "title": "Jungle",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:karaoke",
+      "title": "Karaoke",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:keep-the-family-close",
+      "title": "Keep the Family Close",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:kmt",
+      "title": "KMT",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:knife-talk",
+      "title": "Knife Talk",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:know-bout-me",
+      "title": "Know Bout Me",
+      "artist": "Timbaland"
+    },
+    {
+      "id": "drake:know-yourself",
+      "title": "Know Yourself",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:landed",
+      "title": "Landed",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:laugh-now-cry-later",
+      "title": "Laugh Now Cry Later",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:legend",
+      "title": "Legend",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:lemon-drake-remix",
+      "title": "Lemon [Drake Remix]",
+      "artist": "N.E.R.D & Rihanna"
+    },
+    {
+      "id": "drake:lemon-pepper-freestyle",
+      "title": "Lemon Pepper Freestyle",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:let-s-call-it-off",
+      "title": "Let's Call It Off",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:liability",
+      "title": "Liability",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:life-is-good",
+      "title": "Life Is Good",
+      "artist": "Future"
+    },
+    {
+      "id": "drake:life-is-good-remix",
+      "title": "Life Is Good (Remix)",
+      "artist": "Future"
+    },
+    {
+      "id": "drake:light-up",
+      "title": "Light Up",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:little-birdie",
+      "title": "Little Birdie",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:little-bit",
+      "title": "Little Bit",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:live-from-the-gutter",
+      "title": "Live From the Gutter",
+      "artist": "Drake & Future"
+    },
+    {
+      "id": "drake:look-alive",
+      "title": "Look Alive",
+      "artist": "BlocBoy JB"
+    },
+    {
+      "id": "drake:look-what-you-ve-done",
+      "title": "Look What You've Done",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:lord-knows",
+      "title": "Lord Knows",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:lose-you",
+      "title": "Lose You",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:losses",
+      "title": "Losses",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:love-all",
+      "title": "Love All",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:loyal-remix",
+      "title": "LOYAL [Remix]",
+      "artist": "PARTYNEXTDOOR"
+    },
+    {
+      "id": "drake:lust-for-life",
+      "title": "Lust For Life",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:madiba-riddim",
+      "title": "Madiba Riddim",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:madonna",
+      "title": "Madonna",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:major-distribution",
+      "title": "Major Distribution",
+      "artist": "Drake & 21 Savage"
+    },
+    {
+      "id": "drake:make-me-proud",
+      "title": "Make Me Proud",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:make-them-cry",
+      "title": "Make Them Cry",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:make-them-know",
+      "title": "Make Them Know",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:make-them-pay",
+      "title": "Make Them Pay",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:make-them-remember",
+      "title": "Make Them Remember",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:march-14",
+      "title": "March 14",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:marvin-s-room",
+      "title": "Marvin's Room",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:marvins-room",
+      "title": "Marvins Room",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:massive",
+      "title": "Massive",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:meltdown",
+      "title": "MELTDOWN",
+      "artist": "Travis Scott"
+    },
+    {
+      "id": "drake:meltdown-instrumental",
+      "title": "MELTDOWN [Instrumental]",
+      "artist": "Travis Scott"
+    },
+    {
+      "id": "drake:members-only",
+      "title": "Members Only",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:middle-of-the-ocean",
+      "title": "Middle of the Ocean",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:miss-me",
+      "title": "Miss Me",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:mob-ties",
+      "title": "Mob Ties",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:money-in-the-grave",
+      "title": "Money In The Grave",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:more-m-s",
+      "title": "More M’s",
+      "artist": "Drake & 21 Savage"
+    },
+    {
+      "id": "drake:my-side",
+      "title": "My Side",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:n-2-deep",
+      "title": "N 2 Deep",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:national-treasures",
+      "title": "National Treasures",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:new-bestie",
+      "title": "New Bestie",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:nice-for-what",
+      "title": "Nice For What",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:no-face",
+      "title": "No Face",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:no-frauds",
+      "title": "No Frauds",
+      "artist": "Nicki Minaj, Drake & Lil Wayne"
+    },
+    {
+      "id": "drake:no-friends-in-the-industry",
+      "title": "No Friends In The Industry",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:no-long-talk",
+      "title": "No Long Talk",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:no-new-friends-sftb-remix",
+      "title": "No New Friends (SFTB Remix)",
+      "artist": "DJ Khaled"
+    },
+    {
+      "id": "drake:no-shopping",
+      "title": "No Shopping",
+      "artist": "French Montana"
+    },
+    {
+      "id": "drake:no-stylist",
+      "title": "No Stylist",
+      "artist": "French Montana"
+    },
+    {
+      "id": "drake:no-tellin",
+      "title": "No Tellin'",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:nonstop",
+      "title": "Nonstop",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:not-you-too",
+      "title": "Not You Too",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:nothings-into-somethings",
+      "title": "Nothings Into Somethings",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:november-18th",
+      "title": "November 18th",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:now-forever",
+      "title": "Now & Forever",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:omerta",
+      "title": "Omertà",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:on-bs",
+      "title": "On BS",
+      "artist": "Drake & 21 Savage"
+    },
+    {
+      "id": "drake:one-dance",
+      "title": "One Dance",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:only-you-freestyle",
+      "title": "Only You Freestyle",
+      "artist": "Headie One & Drake"
+    },
+    {
+      "id": "drake:oprah-s-bank-account",
+      "title": "Oprah's Bank Account",
+      "artist": "Lil Yachty & DaBaby"
+    },
+    {
+      "id": "drake:outro",
+      "title": "Outro",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:outside-tweaking",
+      "title": "Outside Tweaking",
+      "artist": "Drake & Stunna Sandy"
+    },
+    {
+      "id": "drake:over",
+      "title": "Over",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:over-my-dead-body",
+      "title": "Over My Dead Body",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:overdrive",
+      "title": "Overdrive",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:own-it",
+      "title": "Own It",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:p-y-millions",
+      "title": "P***y & Millions",
+      "artist": "Drake & 21 Savage"
+    },
+    {
+      "id": "drake:pain-1993",
+      "title": "Pain 1993",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:papi-s-home",
+      "title": "Papi’s Home",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:paris-morton-music",
+      "title": "Paris Morton Music",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:passionfruit",
+      "title": "Passionfruit",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:peak",
+      "title": "Peak",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:pipe-down",
+      "title": "Pipe Down",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:plastic-bag",
+      "title": "Plastic Bag",
+      "artist": "Drake & Future"
+    },
+    {
+      "id": "drake:plot-twist",
+      "title": "Plot Twist",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:polar-opposites",
+      "title": "Polar Opposites",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:pop-style",
+      "title": "Pop Style",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:popstar",
+      "title": "POPSTAR",
+      "artist": "DJ Khaled"
+    },
+    {
+      "id": "drake:portland",
+      "title": "Portland",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:pound-cake-paris-morton-music-2",
+      "title": "Pound Cake / Paris Morton Music 2",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:practice",
+      "title": "Practice",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:preach",
+      "title": "Preach",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:princess",
+      "title": "Princess",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:prioritizing",
+      "title": "Prioritizing",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:privileged-rappers",
+      "title": "Privileged Rappers",
+      "artist": "Drake & 21 Savage"
+    },
+    {
+      "id": "drake:push-ups",
+      "title": "Push Ups",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:q-a",
+      "title": "Q&A",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:quebec",
+      "title": "Quebec",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:race-my-mind",
+      "title": "Race My Mind",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:ran-to-atlanta",
+      "title": "Ran To Atlanta",
+      "artist": "Drake, Future & Molly Santana"
+    },
+    {
+      "id": "drake:ratchet-happy-birthday",
+      "title": "Ratchet Happy Birthday",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:red-button",
+      "title": "Red Button",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:red-button-instrumental",
+      "title": "Red Button (Instrumental)",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:redemption",
+      "title": "Redemption",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:rich-baby-daddy",
+      "title": "Rich Baby Daddy",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:rich-flex",
+      "title": "Rich Flex",
+      "artist": "Drake & 21 Savage"
+    },
+    {
+      "id": "drake:right-hand",
+      "title": "Right Hand",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:road-trips",
+      "title": "Road Trips",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:round-of-applause",
+      "title": "Round of Applause",
+      "artist": "Waka Flocka Flame"
+    },
+    {
+      "id": "drake:rusty-intro",
+      "title": "Rusty Intro",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:sacrifices",
+      "title": "Sacrifices",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:sandra-s-rose",
+      "title": "Sandra’s Rose",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:say-what-s-real",
+      "title": "Say What's Real",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:scholarships",
+      "title": "Scholarships",
+      "artist": "Drake & Future"
+    },
+    {
+      "id": "drake:screw-the-world-interlude",
+      "title": "Screw The World (Interlude)",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:search-rescue",
+      "title": "Search & Rescue",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:seeing-green",
+      "title": "Seeing Green",
+      "artist": "Nicki Minaj, Drake & Lil Wayne"
+    },
+    {
+      "id": "drake:shabang",
+      "title": "Shabang",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:she-will",
+      "title": "She Will",
+      "artist": "Lil Wayne & Drake"
+    },
+    {
+      "id": "drake:she-will-instrumental",
+      "title": "She Will (Instrumental)",
+      "artist": "Lil Wayne & Drake"
+    },
+    {
+      "id": "drake:shot-for-me",
+      "title": "Shot for Me",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:show-me-a-good-time",
+      "title": "Show Me a Good Time",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:shut-it-down",
+      "title": "Shut It Down",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:sideways",
+      "title": "Sideways",
+      "artist": "Gordo & Drake"
+    },
+    {
+      "id": "drake:signs",
+      "title": "Signs",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:since-way-back",
+      "title": "Since Way Back",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:skepta-interlude",
+      "title": "Skepta Interlude",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:slap-the-city",
+      "title": "Slap The City",
+      "artist": "Drake & Qendresa"
+    },
+    {
+      "id": "drake:slime-you-out",
+      "title": "Slime You Out",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:sneakin",
+      "title": "Sneakin'",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:so-good",
+      "title": "So Good",
+      "artist": "Shanell"
+    },
+    {
+      "id": "drake:solar-eclipse",
+      "title": "Solar Eclipse",
+      "artist": "Drake & Don Toliver"
+    },
+    {
+      "id": "drake:somebody-loves-me-pt-2",
+      "title": "SOMEBODY LOVES ME PT. 2",
+      "artist": "PARTYNEXTDOOR, Drake & Cash Cobain"
+    },
+    {
+      "id": "drake:sooner-than-later",
+      "title": "Sooner Than Later",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:spin-bout-u",
+      "title": "Spin Bout U",
+      "artist": "Drake & 21 Savage"
+    },
+    {
+      "id": "drake:star67",
+      "title": "Star67",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:started-from-the-bottom",
+      "title": "Started From the Bottom",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:stay-schemin",
+      "title": "Stay Schemin'",
+      "artist": "Rick Ross"
+    },
+    {
+      "id": "drake:staying-alive",
+      "title": "STAYING ALIVE",
+      "artist": "DJ Khaled"
+    },
+    {
+      "id": "drake:sticky",
+      "title": "Sticky",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:still-here",
+      "title": "Still Here",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:stories-about-my-brother",
+      "title": "Stories About My Brother",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:stuck",
+      "title": "Stuck",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:successful",
+      "title": "Successful",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:summer-games",
+      "title": "Summer Games",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:summer-sixteen",
+      "title": "Summer Sixteen",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:summers-over-interlude",
+      "title": "Summers Over Interlude",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:survival",
+      "title": "Survival",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:take-care",
+      "title": "Take Care",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:talk-up",
+      "title": "Talk Up",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:teenage-fever",
+      "title": "Teenage Fever",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:texts-go-green",
+      "title": "Texts Go Green",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:thank-me-now",
+      "title": "Thank Me Now",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:that-s-how-you-feel",
+      "title": "That’s How You Feel",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:the-calm",
+      "title": "The Calm",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:the-language",
+      "title": "The Language",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:the-motion",
+      "title": "The Motion",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:the-motto-bonus-track",
+      "title": "The Motto [Bonus Track]",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:the-one",
+      "title": "The One",
+      "artist": "Mary J. Blige"
+    },
+    {
+      "id": "drake:the-real-her",
+      "title": "The Real Her",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:the-remorse",
+      "title": "The Remorse",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:the-resistance",
+      "title": "The Resistance",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:the-ride",
+      "title": "The Ride",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:the-shoe-fits",
+      "title": "The Shoe Fits",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:the-shoe-fits-instrumental",
+      "title": "The Shoe Fits (Instrumental)",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:throw-it-in-the-bag-remix",
+      "title": "Throw It In the Bag (Remix)",
+      "artist": "Fabolous"
+    },
+    {
+      "id": "drake:tie-that-binds",
+      "title": "Tie That Binds",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:time-flies",
+      "title": "Time Flies",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:too-good",
+      "title": "Too Good",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:too-much",
+      "title": "Too Much",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:toosie-slide",
+      "title": "Toosie Slide",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:treacherous-twins",
+      "title": "Treacherous Twins",
+      "artist": "Drake & 21 Savage"
+    },
+    {
+      "id": "drake:tried-our-best",
+      "title": "Tried Our Best",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:true-bestie",
+      "title": "True Bestie",
+      "artist": "Drake & Iconic Savvy"
+    },
+    {
+      "id": "drake:trust-issues",
+      "title": "Trust Issues",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:tsu",
+      "title": "TSU",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:tuesday",
+      "title": "Tuesday",
+      "artist": "iLoveMakonnen"
+    },
+    {
+      "id": "drake:tuscan-leather",
+      "title": "Tuscan Leather",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:two-birds-one-stone",
+      "title": "Two Birds, One Stone",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:u-with-me",
+      "title": "U With Me?",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:un-thinkable-i-m-ready-remix-feat-drake",
+      "title": "Un-thinkable (I'm Ready) [Remix] {feat. Drake}",
+      "artist": "Alicia Keys"
+    },
+    {
+      "id": "drake:under-ground-kings",
+      "title": "Under Ground Kings",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:unforgettable",
+      "title": "Unforgettable",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:unstoppable",
+      "title": "Unstoppable",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:up-all-night",
+      "title": "Up All Night",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:uptown",
+      "title": "Uptown",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:used-to",
+      "title": "Used To",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:used-to-this",
+      "title": "Used to This",
+      "artist": "Future"
+    },
+    {
+      "id": "drake:versace-remix",
+      "title": "Versace [Remix]",
+      "artist": "Migos"
+    },
+    {
+      "id": "drake:views",
+      "title": "Views",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:virginia-beach",
+      "title": "Virginia Beach",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:wait-for-u",
+      "title": "WAIT FOR U",
+      "artist": "Future"
+    },
+    {
+      "id": "drake:wait-for-u-instrumental",
+      "title": "WAIT FOR U [Instrumental]",
+      "artist": "Future"
+    },
+    {
+      "id": "drake:wanna-know-remix",
+      "title": "Wanna Know Remix",
+      "artist": "Dave"
+    },
+    {
+      "id": "drake:wants-and-needs",
+      "title": "Wants and Needs",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:war",
+      "title": "War",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:wasting-time",
+      "title": "Wasting Time",
+      "artist": "Brent Faiyaz"
+    },
+    {
+      "id": "drake:way-2-sexy",
+      "title": "Way 2 Sexy",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:we-caa-done",
+      "title": "We Caa Done",
+      "artist": "Popcaan & Drake"
+    },
+    {
+      "id": "drake:we-in-this-1-5",
+      "title": "We in This 1.5",
+      "artist": "DJ Drama"
+    },
+    {
+      "id": "drake:we-ll-be-fine",
+      "title": "We'll Be Fine",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:wednesday-night-interlude",
+      "title": "Wednesday Night Interlude",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:weston-road-flows",
+      "title": "Weston Road Flows",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:what-did-i-miss",
+      "title": "What Did I Miss?",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:what-up",
+      "title": "What Up?",
+      "artist": "Pimp C"
+    },
+    {
+      "id": "drake:what-would-pluto-do",
+      "title": "What Would Pluto Do",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:what-s-next",
+      "title": "What’s Next",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:when-to-say-when",
+      "title": "When To Say When",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:where-s-your-stuff-interlude",
+      "title": "Where’s Your Stuff Interlude",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:which-one",
+      "title": "Which One",
+      "artist": "Drake & Central Cee"
+    },
+    {
+      "id": "drake:whisper-my-name",
+      "title": "Whisper My Name",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:white-bone",
+      "title": "White Bone",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:who-told-you",
+      "title": "Who Told You",
+      "artist": "J Hus"
+    },
+    {
+      "id": "drake:wick-man",
+      "title": "Wick Man",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:wick-man-instrumental",
+      "title": "Wick Man (Instrumental)",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:with-you",
+      "title": "With You",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:wnba",
+      "title": "WNBA",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:won-t-be-late",
+      "title": "Won't Be Late",
+      "artist": "Swae Lee"
+    },
+    {
+      "id": "drake:worst-behavior",
+      "title": "Worst Behavior",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:wu-tang-forever",
+      "title": "Wu-Tang Forever",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:yebba-s-heartbreak",
+      "title": "Yebba’s Heartbreak",
+      "artist": "Drake & Yebba"
+    },
+    {
+      "id": "drake:you-the-6",
+      "title": "You & The 6",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:you-broke-my-heart",
+      "title": "You Broke My Heart",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:you-broke-my-heart-instrumental",
+      "title": "You Broke My Heart (Instrumental)",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:you-only-live-twice",
+      "title": "You Only Live Twice",
+      "artist": "Drake"
+    },
+    {
+      "id": "drake:you-re-mines-still",
+      "title": "You’re Mines Still",
+      "artist": "Yung Bleu"
+    }
+  ]
+}

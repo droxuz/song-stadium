@@ -4,8 +4,12 @@ import { readFile } from 'node:fs/promises';
 import { randomInt } from 'node:crypto';
 import {
     createGameState, finishRound, getPlayerView, skipClue, startRound, submitGuess,
-    type GameState,
+    CLUES, type GameState,
 } from './game.js';
+import { clipAudio } from './audio.js';
+import { resolve } from "node:path";
+import { fileURLToPath } from 'node:url';
+import { songSuggestions } from './song-catalog.js';
 
 type Payload = Record<string, unknown>;
 function isPayload(value: unknown): value is Payload {
@@ -17,6 +21,10 @@ interface Song {
     "song-name": string,
     "song-link": string
 }
+const backendDirectory = fileURLToPath(
+    new URL("../", import.meta.url),
+);
+//Creates a List of songs
 const songs: Song[] = JSON.parse(await readFile(
     new URL("../music/music-stub.json", import.meta.url), "utf-8",
 ));
@@ -30,16 +38,25 @@ export function selectSongFromCatalog(_roundNumber: number, previousSongId?: str
     return candidates[randomInt(candidates.length)]!;
 }
 
+async function loadClueAudio(songId: string, seconds: number): Promise<Buffer> {
+    const song = songs.find(song => String(song['song-id']) === songId);
+    if (!song) throw new Error('Selected song is missing');
+    return clipAudio(resolve(backendDirectory, '.' + song['song-link']), seconds, 0);
+}
+
 export function createGameManager(
     connectedPlayers: Map<string, Socket>,
     selectSong: (roundNumber: number, previousSongId?: string) => string = selectSongFromCatalog,
     roundDuration = 60_000,
     revealDuration = 3_000,
+    loadAudio: (songId: string, seconds: number) => Promise<Buffer> = loadClueAudio,
 ) {
     // Private to this backend process. Neither map is exposed through socket events.
     const games = new Map<string, GameState>();
     const assignments = new Map<string, string>();
     const timers = new Map<string, ReturnType<typeof setTimeout>>();
+    // At most five clips per active round; concurrent requests share FFmpeg work.
+    const clips = new Map<GameState, Map<number, Promise<Buffer>>>();
 
     function clearTimer(roomId: string) {
         const timer = timers.get(roomId);
@@ -74,6 +91,7 @@ export function createGameManager(
     function completeRound(game: GameState) {
         const result = finishRound(game, game.roundNumber);
         if (!result.accepted) return;
+        clips.delete(game);
         clearTimer(game.roomId);
         // finishRound returns the answer for server use; only the public view is emitted.
         publish(game);
@@ -103,6 +121,8 @@ export function createGameManager(
 
     function removeMatch(match: Match) {
         clearTimer(match.roomId);
+        const game = games.get(match.roomId);
+        if (game) clips.delete(game);
         games.delete(match.roomId);
         for (const id of match.playerIDs) {
             if (assignments.get(id) === match.roomId) assignments.delete(id);
@@ -149,6 +169,11 @@ export function createGameManager(
                 socket.emit('gameState', getPlayerView(game, playerID));
             });
 
+            socket.on('getSongCatalog', (data: unknown) => {
+                const game = findGame(data);
+                if (game) socket.emit('songCatalog', { roomId: game.roomId, songs: songSuggestions });
+            });
+
             function handleAction(data: unknown, guess: boolean) {
                 if (!isPayload(data) || !Number.isSafeInteger(data.roundNumber) ||
                     (data.roundNumber as number) < 1 ||
@@ -171,6 +196,58 @@ export function createGameManager(
 
             socket.on('submitGuess', (data: unknown) => handleAction(data, true));
             socket.on('skipClue', (data: unknown) => handleAction(data, false));
+
+            socket.on('getClueAudio', async (data: unknown) => {
+                if (!isPayload(data) || !Number.isSafeInteger(data.roundNumber) ||
+                    !Number.isSafeInteger(data.clueIndex)) {
+                    reject('Invalid audio request.');
+                    return;
+                }
+                const game = findGame(data);
+                if (!game) return;
+                const roundNumber = data.roundNumber as number;
+                const clueIndex = data.clueIndex as number;
+                const identity = { roomId: game.roomId, roundNumber, clueIndex };
+                const isCurrent = () => {
+                    const player = game.players[playerID]!;
+                    return games.get(game.roomId) === game &&
+                        connectedPlayers.get(playerID) === socket && socket.connected &&
+                        assignments.get(playerID) === game.roomId && socket.rooms.has(game.roomId) &&
+                        game.status === 'playing' && game.roundPhase === 'guessing' &&
+                        game.roundNumber === roundNumber && Date.now() < game.roundEndsAt &&
+                        !player.finishedRound && player.clueIndex === clueIndex;
+                };
+                if (!isCurrent()) {
+                    socket.emit('clueAudioError', { ...identity, message: 'This clue is no longer available.' });
+                    return;
+                }
+                let cache = clips.get(game);
+                if (!cache) {
+                    cache = new Map();
+                    clips.set(game, cache);
+                }
+                try {
+                    let audio = cache.get(clueIndex);
+                    if (!audio) {
+                        // Neither duration nor song path is ever taken from the request.
+                        audio = loadAudio(game.correctSongId, CLUES[clueIndex]!.seconds);
+                        cache.set(clueIndex, audio);
+                    }
+                    const bytes = await audio;
+                    // The player may have skipped, disconnected, or finished during FFmpeg.
+                    if (!isCurrent()) return;
+                    socket.emit('clueAudio', {
+                        ...identity, seconds: CLUES[clueIndex]!.seconds,
+                        mimeType: 'audio/wav', audio: bytes,
+                    });
+                } catch (error) {
+                    cache.delete(clueIndex);
+                    console.error('Could not prepare clue audio:', error);
+                    if (isCurrent()) socket.emit('clueAudioError', {
+                        ...identity, message: 'Could not load your clue. Please retry.',
+                    });
+                }
+            });
             // Creation, round completion, and score updates have no client handlers.
             socket.on('disconnect', () => {
                 const roomId = assignments.get(playerID);
@@ -182,6 +259,7 @@ export function createGameManager(
             for (const roomId of timers.keys()) clearTimer(roomId);
             games.clear();
             assignments.clear();
+            clips.clear();
         },
     };
 }

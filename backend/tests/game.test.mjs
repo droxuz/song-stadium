@@ -4,6 +4,17 @@ import { createGameState, startRound, finishRound, submitGuess, skipClue, TOTAL_
 
 const createGame = (room = 'room-A') => createGameState(room, ['a', 'b'], 'song-1', 30_000);
 
+test('every clue duration pairs with the correct server scoring multiplier', t => {
+    t.mock.method(Date, 'now', () => 1_000_000);
+    for (const [index, multiplier] of [1, 0.8, 0.6, 0.4, 0.2].entries()) {
+        const game = createGame();
+        for (let skip = 0; skip < index; skip++) skipClue(game, 'a', 1);
+        assert.equal(submitGuess(game, 'a', 'song-1', 1).score, Math.round(1000 * multiplier));
+        assert.equal(game.players.b.clueIndex, 0);
+        assert.equal(game.players.b.score, 0);
+    }
+});
+
 test('speed bonus falls from 2x toward 1x using elapsed server time', t => {
     let now = 1_000_000;
     t.mock.method(Date, 'now', () => now);

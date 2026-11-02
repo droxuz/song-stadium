@@ -4,6 +4,9 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useSocket } from "../../SocketProvider";
+import ClueAudio from "./ClueAudio";
+import SongSearch from "./SongSearch";
+import type { SongOption } from "@/lib/song-search";
 
 // Public response only. The correct song and private state stay on the backend.
 interface PlayerGameView {
@@ -49,6 +52,9 @@ function GameRoom({ roomId }: { roomId: string }) {
     const socket = useSocket();
     const [game, setGame] = useState<PlayerGameView | null>(null);
     const [songId, setSongId] = useState("");
+    const [songQuery, setSongQuery] = useState("");
+    const [songs, setSongs] = useState<SongOption[]>([]);
+    const [volume, setVolume] = useState(0.7);
     const [connection, setConnection] = useState("Connecting to the server…");
     const [error, setError] = useState<string | null>(null);
     const [feedback, setFeedback] = useState("");
@@ -73,6 +79,7 @@ function GameRoom({ roomId }: { roomId: string }) {
                 setError("The game did not respond. Try loading it again.");
             }, 8000);
             socket.emit("getGameState", { roomId });
+            socket.emit("getSongCatalog", { roomId });
         }
 
         function handleGameState(data: PlayerGameView) {
@@ -81,6 +88,7 @@ function GameRoom({ roomId }: { roomId: string }) {
             if (data.roundNumber !== currentRound.current) {
                 currentRound.current = data.roundNumber;
                 setSongId("");
+                setSongQuery("");
                 setFeedback("");
                 actionPending.current = false;
                 setPending(false);
@@ -100,6 +108,8 @@ function GameRoom({ roomId }: { roomId: string }) {
                 return;
             }
             if (isGuess) {
+                setSongId("");
+                setSongQuery("");
                 setFeedback(data.correct
                     ? `Correct! You earned ${data.score ?? 0} points.`
                     : "Incorrect. Try another song or skip to a longer clue.");
@@ -112,6 +122,10 @@ function GameRoom({ roomId }: { roomId: string }) {
 
         const handleGuessResult = (data: ActionResult) => handleResult(data, true);
         const handleClueResult = (data: ActionResult) => handleResult(data, false);
+
+        function handleCatalog(data: { roomId: string; songs: SongOption[] }) {
+            if (data.roomId === roomId) setSongs(data.songs);
+        }
 
         function handleGameError(data: { message: string }) {
             clearTimeout(stateTimeout);
@@ -143,6 +157,7 @@ function GameRoom({ roomId }: { roomId: string }) {
 
         // Listen before requesting the initial state.
         socket.on("gameState", handleGameState);
+        socket.on("songCatalog", handleCatalog);
         socket.on("guessResult", handleGuessResult);
         socket.on("clueResult", handleClueResult);
         socket.on("gameError", handleGameError);
@@ -155,6 +170,7 @@ function GameRoom({ roomId }: { roomId: string }) {
         return () => {
             clearTimeout(stateTimeout);
             socket.off("gameState", handleGameState);
+            socket.off("songCatalog", handleCatalog);
             socket.off("guessResult", handleGuessResult);
             socket.off("clueResult", handleClueResult);
             socket.off("gameError", handleGameError);
@@ -257,12 +273,24 @@ function GameRoom({ roomId }: { roomId: string }) {
                                     {game.roundPhase === "guessing" ? `${secondsLeft}s left` : "Round complete"}
                                 </span>
                             </div>
-                            <p className="mt-3 text-sm text-zinc-500">Audio and song search are not connected yet. Enter a song ID to test guessing.</p>
+                            {socket?.connected && !error && !cancelled && game.roundPhase === "guessing" &&
+                                !game.finishedRound && secondsLeft > 0 && (
+                                <ClueAudio key={`${game.roundNumber}:${game.clueIndex}`} socket={socket}
+                                    roomId={roomId} roundNumber={game.roundNumber} clueIndex={game.clueIndex}
+                                    disabled={pending} volume={volume} />
+                            )}
+                            <label className="mt-4 flex items-center gap-3 text-sm" htmlFor="clue-volume">
+                                <span>Volume</span>
+                                <input id="clue-volume" type="range" min="0" max="100" step="1"
+                                    value={Math.round(volume * 100)} aria-valuetext={`${Math.round(volume * 100)} percent`}
+                                    onChange={event => setVolume(Number(event.target.value) / 100)}
+                                    className="w-40 accent-zinc-800 dark:accent-zinc-200" />
+                                <span className="w-10 tabular-nums">{Math.round(volume * 100)}%</span>
+                            </label>
+                            <p className="mt-3 text-sm text-zinc-500">Listen to your clue, then search for a song. Skipping or guessing incorrectly unlocks a longer clue with fewer available points.</p>
                             <form onSubmit={handleSubmitGuess} className="mt-6 flex flex-col gap-3">
-                                <label htmlFor="song-guess" className="font-medium">Your guess</label>
-                                <input id="song-guess" value={songId} onChange={event => setSongId(event.target.value)}
-                                    placeholder="Enter a song ID" maxLength={200} required autoComplete="off" disabled={!canAct}
-                                    className="w-full rounded-lg border border-zinc-300 bg-transparent px-4 py-3 disabled:opacity-40 dark:border-zinc-700" />
+                                <SongSearch songs={songs} query={songQuery} selectedId={songId} disabled={!canAct}
+                                    onChange={(query, id) => { setSongQuery(query); setSongId(id); }} />
                                 <div className="flex flex-wrap gap-3">
                                     <button type="submit" disabled={!canAct || !songId.trim()} className={buttonClass}>Submit guess</button>
                                     <button type="button" disabled={!canAct} onClick={() => sendAction("skipClue")} className={buttonClass}>Skip clue</button>
