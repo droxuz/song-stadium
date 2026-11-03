@@ -76,16 +76,17 @@ export default function ClueAudio({ socket, roomId, roundNumber, clueIndex, disa
     }
 
     return (
-        <div className="mt-4 flex flex-col items-start gap-3">
+        <div className="lr-audio-control">
             <audio ref={audio} src={source ?? undefined} preload="auto"
                 onError={() => setError("Could not play this audio. Please retry loading it.")} />
             <button type="button" onClick={play} disabled={disabled || !source}
-                className="rounded-lg border border-zinc-300 px-5 py-3 font-medium disabled:opacity-40 dark:border-zinc-700">
+                className="lr-play">
+                <span aria-hidden="true">▶</span>
                 {source ? "Play / replay clue" : "Loading audio…"}
             </button>
-            {error && <div role="alert">
+            {error && <div role="alert" className="lr-audio-error">
                 <p>{error}</p>
-                <button type="button" className="mt-2 underline" disabled={disabled} onClick={() => {
+                <button type="button" className="lr-text-button" disabled={disabled} onClick={() => {
                     setSource(null);
                     setError(null);
                     setRetry(value => value + 1);

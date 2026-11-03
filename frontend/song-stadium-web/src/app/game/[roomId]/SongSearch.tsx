@@ -35,8 +35,8 @@ export default function SongSearch({ songs, query, selectedId, disabled, onChang
         }
     }
 
-    return <div className="relative">
-        <label htmlFor="song-guess" className="font-medium">Your guess</label>
+    return <div className="lr-song-search">
+        <label htmlFor="song-guess">What’s on the turntable?</label>
         <input id="song-guess" role="combobox" aria-autocomplete="list" aria-expanded={visible}
             aria-controls={listId} aria-activedescendant={visible && matches[activeIndex] ? `${listId}-${activeIndex}` : undefined}
             aria-describedby={`${listId}-help`} value={query} maxLength={200} autoComplete="off"
@@ -49,19 +49,19 @@ export default function SongSearch({ songs, query, selectedId, disabled, onChang
                 setActiveIndex(0);
                 setOpen(true);
             }}
-            className="mt-2 w-full rounded-lg border border-zinc-300 bg-transparent px-4 py-3 disabled:opacity-40 dark:border-zinc-700" />
+            className="lr-song-input" />
         {visible && <ul id={listId} role="listbox" aria-label="Matching songs"
-            className="absolute z-10 mt-1 max-h-72 w-full overflow-auto rounded-lg border border-zinc-300 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-900">
+            className="lr-song-options">
             {matches.map((song, index) => <li key={song.id} id={`${listId}-${index}`} role="option"
                 aria-selected={activeIndex === index} onMouseDown={event => event.preventDefault()}
                 onMouseEnter={() => setActiveIndex(index)} onClick={() => choose(song)}
-                className={`cursor-pointer px-4 py-3 ${activeIndex === index ? "bg-zinc-100 dark:bg-zinc-800" : ""}`}>
-                <span className="block font-medium">{song.title}</span>
-                <span className="text-sm text-zinc-500">{song.artist}</span>
+                className={activeIndex === index ? "is-active" : undefined}>
+                <strong>{song.title}</strong>
+                <small>{song.artist}</small>
             </li>)}
-            {!matches.length && <li className="px-4 py-3 text-sm text-zinc-500">No matching songs. Try another title.</li>}
+            {!matches.length && <li>No matching songs. Try another title.</li>}
         </ul>}
-        <p id={`${listId}-help`} className="mt-2 text-sm text-zinc-500" aria-live="polite">
+        <p id={`${listId}-help`} className="lr-song-help" aria-live="polite">
             {selectedId ? `Selected: ${query}` : "Choose a suggestion, then submit your guess. Use arrow keys and Enter to select."}
         </p>
     </div>;

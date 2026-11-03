@@ -7,6 +7,7 @@ import { useSocket } from "../../SocketProvider";
 import ClueAudio from "./ClueAudio";
 import SongSearch from "./SongSearch";
 import type { SongOption } from "@/lib/song-search";
+import { ListeningRoom, RecordArtwork, ClueWaveform } from "../../components/ListeningRoom";
 
 // Public response only. The correct song and private state stay on the backend.
 interface PlayerGameView {
@@ -38,10 +39,12 @@ export default function GamePage() {
         roomId = decodeURIComponent(routeRoomId);
     } catch {
         return (
-            <main className="mx-auto w-full max-w-3xl px-6 py-10">
-                <p role="alert">This game link is invalid.</p>
-                <Link href="/" className="mt-4 inline-block underline">Back to home</Link>
-            </main>
+            <ListeningRoom inGame connection="Invalid game link">
+                <section className="lr-error">
+                    <p role="alert">This game link is invalid.</p>
+                    <Link href="/" className="lr-text-button">Back to the lobby</Link>
+                </section>
+            </ListeningRoom>
         );
     }
     // Reset page state for a different room, preserving the shared socket.
@@ -220,92 +223,106 @@ function GameRoom({ roomId }: { roomId: string }) {
     }
 
     const secondsLeft = game ? Math.max(0, Math.ceil((game.roundEndsAt - now) / 1000)) : 0;
-    const buttonClass = "rounded-lg border border-zinc-300 px-5 py-3 font-medium hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-zinc-700 dark:hover:bg-zinc-800";
     const phaseMessage = !game ? "Loading your game…"
-        : game.status === "finished" ? "Game finished. Final scores are below."
+        : game.status === "finished" ? "Game finished. Final scores are ready."
         : game.roundPhase === "reveal" ? "Round complete. The next round will start shortly."
         : game.finishedRound ? "Your round is complete. Waiting for your opponent."
         : secondsLeft === 0 ? "Time is up. Waiting for the server to end the round."
         : "Guess the song or skip for a longer clue.";
 
     return (
-        <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-6 py-10 text-zinc-950 dark:text-zinc-50">
-            <header className="flex flex-wrap items-center justify-between gap-3">
+        <ListeningRoom inGame connection={connection}>
+            <header className="lr-game-heading">
                 <div>
-                    <p className="text-sm text-zinc-500">Song Stadium</p>
-                    <h1 className="text-3xl font-semibold">{game ? `Round ${game.roundNumber}` : "Your game"}</h1>
+                    <span className="lr-eyebrow">Drop the needle. Trust your ears.</span>
+                    <h1>{game?.status === "finished" ? "That's a wrap." : "Does this ring a bell?"}</h1>
                 </div>
-                <span className="text-sm text-zinc-500">{connection}</span>
+                <div className="lr-clock" role="timer" aria-label="Time remaining">
+                    <span>{game?.roundPhase === "guessing" ? "TIME LEFT" : "THE MATCH"}</span>
+                    <b>{game?.roundPhase === "guessing" ? `00:${String(secondsLeft).padStart(2, "0")}` : "—"}</b>
+                    <span>{game ? `ROUND ${game.roundNumber} / 02` : "CONNECTING"}</span>
+                </div>
             </header>
 
             {error ? (
-                <section className="rounded-xl border border-amber-400 p-5" aria-label="Game unavailable">
+                <section className="lr-error" aria-label="Game unavailable">
                     <p role="alert">{error}</p>
                     {!cancelled && (
-                        <button type="button" className={`${buttonClass} mt-4`} disabled={!socket?.connected}
+                        <button type="button" className="lr-secondary" disabled={!socket?.connected}
                             onClick={() => setRequestVersion(version => version + 1)}>
                             Load game again
                         </button>
                     )}
                 </section>
             ) : (
-                <p role="status" aria-live="polite">{phaseMessage}</p>
+                <p className="lr-phase" role="status" aria-live="polite">{phaseMessage}</p>
             )}
 
             {game && (
-                <>
-                    <section aria-label="Scores" className="grid grid-cols-2 gap-4">
+                <div className="lr-game-grid">
+                    {game.status === "playing" ? (
+                        <section className="lr-player" aria-label="Song clue">
+                            <div className="lr-card-heading">
+                                <h2 className="lr-eyebrow">Your audio clue · {game.clueIndex + 1} of 5</h2>
+                                <span className="lr-pill">{game.clueSeconds} SECONDS</span>
+                            </div>
+                            <div className="lr-player-art"><RecordArtwork /><ClueWaveform /></div>
+                            <div className="lr-playback">
+                                {socket?.connected && !error && !cancelled && game.roundPhase === "guessing" &&
+                                    !game.finishedRound && secondsLeft > 0 && (
+                                    <ClueAudio key={`${game.roundNumber}:${game.clueIndex}`} socket={socket}
+                                        roomId={roomId} roundNumber={game.roundNumber} clueIndex={game.clueIndex}
+                                        disabled={pending} volume={volume} />
+                                )}
+                                <label className="lr-volume" htmlFor="clue-volume">
+                                    <span>Volume</span>
+                                    <input id="clue-volume" type="range" min="0" max="100" step="1"
+                                        value={Math.round(volume * 100)} aria-valuetext={`${Math.round(volume * 100)} percent`}
+                                        onChange={event => setVolume(Number(event.target.value) / 100)} />
+                                    <span>{Math.round(volume * 100)}%</span>
+                                </label>
+                            </div>
+                            <div className="lr-clues" aria-label={`Clue ${game.clueIndex + 1} of 5`}>
+                                {[0.1, 0.2, 0.5, 1, 5].map((seconds, index) => (
+                                    <div key={seconds} className={index <= game.clueIndex ? "unlocked" : undefined}>
+                                        <i aria-hidden="true" /><span>{seconds}s</span>
+                                    </div>
+                                ))}
+                            </div>
+                            <p className="lr-instructions">Listen closely, then choose your song. A longer clue gives you more to go on, but fewer available points.</p>
+                            <form onSubmit={handleSubmitGuess}>
+                                <SongSearch songs={songs} query={songQuery} selectedId={songId} disabled={!canAct}
+                                    onChange={(query, id) => { setSongQuery(query); setSongId(id); }} />
+                                <div className="lr-guess-actions">
+                                    <button type="submit" disabled={!canAct || !songId.trim()} className="lr-primary">Lock in guess <span aria-hidden="true">↗</span></button>
+                                    <button type="button" disabled={!canAct} onClick={() => sendAction("skipClue")} className="lr-text-button">Skip for a longer clue →</button>
+                                </div>
+                            </form>
+                            <p role="status" aria-live="polite" className="lr-feedback">{feedback}</p>
+                        </section>
+                    ) : (
+                        <section className="lr-player lr-results" aria-label="Match complete">
+                            <h2>Good listening.</h2>
+                            <p>Two rounds, a few familiar notes, and a friendly rivalry. Your final scores are on the board.</p>
+                            <Link href="/" className="lr-primary">Back to the lobby <span aria-hidden="true">↗</span></Link>
+                        </section>
+                    )}
+                    <aside className="lr-scoreboard" aria-label="Scores">
+                        <div className="lr-score-heading"><span className="lr-eyebrow">{game.status === "finished" ? "Final scores" : "The match"}</span><span>ROUND {game.roundNumber} / 02</span></div>
                         {Object.entries(game.scores)
                             .sort(([a], [b]) => a === game.playerID ? -1 : b === game.playerID ? 1 : 0)
                             .map(([id, score]) => (
-                            <div key={id} className="rounded-xl border border-zinc-200 p-5 dark:border-zinc-800">
-                                <h2 className="text-sm text-zinc-500">{id === game.playerID ? "You" : "Opponent"}</h2>
-                                <p className="mt-1 text-3xl font-semibold tabular-nums">{score} <span className="text-sm font-normal">points</span></p>
+                            <div key={id} className="lr-score">
+                                <span className="lr-score-avatar" aria-hidden="true">{id === game.playerID ? "YOU" : "OP"}</span>
+                                <div><h2>{id === game.playerID ? "You" : "Opponent"}</h2><small>{id === game.playerID ? "YOUR SCORE" : "THE OTHER LISTENER"}</small></div>
+                                <strong aria-label={`${score} points`}>{score.toLocaleString()}</strong>
                             </div>
                         ))}
-                    </section>
-
-                    {game.status === "playing" && (
-                        <section className="rounded-xl border border-zinc-200 p-6 dark:border-zinc-800" aria-label="Song clue">
-                            <div className="flex items-center justify-between gap-4">
-                                <h2 className="text-lg font-medium">Clue {game.clueIndex + 1} · {game.clueSeconds} seconds</h2>
-                                <span role="timer" aria-label="Time remaining" className="tabular-nums">
-                                    {game.roundPhase === "guessing" ? `${secondsLeft}s left` : "Round complete"}
-                                </span>
-                            </div>
-                            {socket?.connected && !error && !cancelled && game.roundPhase === "guessing" &&
-                                !game.finishedRound && secondsLeft > 0 && (
-                                <ClueAudio key={`${game.roundNumber}:${game.clueIndex}`} socket={socket}
-                                    roomId={roomId} roundNumber={game.roundNumber} clueIndex={game.clueIndex}
-                                    disabled={pending} volume={volume} />
-                            )}
-                            <label className="mt-4 flex items-center gap-3 text-sm" htmlFor="clue-volume">
-                                <span>Volume</span>
-                                <input id="clue-volume" type="range" min="0" max="100" step="1"
-                                    value={Math.round(volume * 100)} aria-valuetext={`${Math.round(volume * 100)} percent`}
-                                    onChange={event => setVolume(Number(event.target.value) / 100)}
-                                    className="w-40 accent-zinc-800 dark:accent-zinc-200" />
-                                <span className="w-10 tabular-nums">{Math.round(volume * 100)}%</span>
-                            </label>
-                            <p className="mt-3 text-sm text-zinc-500">Listen to your clue, then search for a song. Skipping or guessing incorrectly unlocks a longer clue with fewer available points.</p>
-                            <form onSubmit={handleSubmitGuess} className="mt-6 flex flex-col gap-3">
-                                <SongSearch songs={songs} query={songQuery} selectedId={songId} disabled={!canAct}
-                                    onChange={(query, id) => { setSongQuery(query); setSongId(id); }} />
-                                <div className="flex flex-wrap gap-3">
-                                    <button type="submit" disabled={!canAct || !songId.trim()} className={buttonClass}>Submit guess</button>
-                                    <button type="button" disabled={!canAct} onClick={() => sendAction("skipClue")} className={buttonClass}>Skip clue</button>
-                                </div>
-                            </form>
-                        </section>
-                    )}
-                    <p role="status" aria-live="polite" className="min-h-6">{feedback}</p>
-                </>
+                        <div className="lr-score-note"><span className="lr-eyebrow">A little reminder</span><p>The shorter the clue,<br />the sweeter the score.</p></div>
+                        <p className="lr-room-label">Room: {roomId}</p>
+                    </aside>
+                </div>
             )}
-
-            <footer className="mt-auto flex flex-col gap-3 pt-6 text-sm text-zinc-500">
-                <p className="break-all">Room: {roomId}</p>
-                <Link href="/" className="w-fit underline underline-offset-4">Back to home</Link>
-            </footer>
-        </main>
+        </ListeningRoom>
     );
 }
