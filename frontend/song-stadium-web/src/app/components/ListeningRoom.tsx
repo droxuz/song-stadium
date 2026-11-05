@@ -15,7 +15,6 @@ export function ListeningRoom({ children, inGame = false, connection }: {
             </Link>
             <nav aria-label="Main navigation">
                 <Link href="/" aria-current={!inGame ? "page" : undefined}>Lobby</Link>
-                {inGame && <span aria-current="page">Your match</span>}
             </nav>
             <span className="lr-connection" data-connection={connection} role="status">
                 <i aria-hidden="true" />{connection}

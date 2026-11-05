@@ -110,15 +110,15 @@ export default function Home() {
         <section className="lr-hero" aria-label="Welcome to Song Stadium">
           <span className="lr-eyebrow">For the ones who know ball</span>
           <h1>A familiar sound.<br /><em>A friendly rivalry.</em></h1>
-          <p>From late-night deep cuts to the tracks you know by heart. Put your ears to the test, one match at a time.</p>
+          <p>From the top of the billboard to underground tracks. Put your knowledge to the test.</p>
           <RecordArtwork sleeve />
           <span className="lr-record-caption"></span>
         </section>
         <section className="lr-match-card" aria-label="Matchmaking">
-          <div className="lr-card-heading"><span className="lr-eyebrow">The matchup</span><span className="lr-pill">1 vs 1</span></div>
-          <h2>{status === 'queued' ? 'Finding your opponent.' : status === 'matched' ? 'Your table is ready.' : 'Good ears. Better knowledge.'}</h2>
-          <p>{status === 'queued' ? 'A little suspense before the first note. We’re finding another listener for your match.' : 'Meet your opponent. Hear a tiny clip. Name the track.'}</p>
-          <div className="lr-match-specs"><span><b>02</b>players</span><span><b>05</b>clues per song</span><span><b>60s</b>per round</span></div>
+          <div className="lr-card-heading"><span className="lr-eyebrow"></span><span className="lr-pill">1 vs 1</span></div>
+          <h2>{status === 'queued' ? 'Finding your opponent.' : status === 'matched' ? 'Your match is ready.' : 'Good ears. Better knowledge.'}</h2>
+          <p>{status === 'queued' ? 'We’re finding your opponent for the match.' : 'Challenge your opponent. Hear a tiny clip. Test your knowledge.'}</p>
+          <div className="lr-match-specs"><span><b>02</b>Players</span><span><b>05</b>Clues</span><span><b>60s</b>Rounds</span></div>
           {status === 'queued' ? (
             <button type="button" className="lr-secondary" onClick={handleQueueDisconnection}>Leave queue <span aria-hidden="true">↗</span></button>
           ) : (

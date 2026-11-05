@@ -47,7 +47,7 @@ async function loadClueAudio(songId: string, seconds: number): Promise<Buffer> {
 export function createGameManager(
     connectedPlayers: Map<string, Socket>,
     selectSong: (roundNumber: number, previousSongId?: string) => string = selectSongFromCatalog,
-    roundDuration = 60_000,
+    roundDuration = 120_000,
     revealDuration = 3_000,
     loadAudio: (songId: string, seconds: number) => Promise<Buffer> = loadClueAudio,
 ) {

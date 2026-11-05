@@ -115,7 +115,7 @@ function GameRoom({ roomId }: { roomId: string }) {
                 setSongQuery("");
                 setFeedback(data.correct
                     ? `Correct! You earned ${data.score ?? 0} points.`
-                    : "Incorrect. Try another song or skip to a longer clue.");
+                    : "Incorrect.");
             } else {
                 setFeedback(data.finishedRound
                     ? "No clues left. Waiting for the round to finish."
@@ -223,24 +223,22 @@ function GameRoom({ roomId }: { roomId: string }) {
     }
 
     const secondsLeft = game ? Math.max(0, Math.ceil((game.roundEndsAt - now) / 1000)) : 0;
-    const phaseMessage = !game ? "Loading your game…"
-        : game.status === "finished" ? "Game finished. Final scores are ready."
-        : game.roundPhase === "reveal" ? "Round complete. The next round will start shortly."
-        : game.finishedRound ? "Your round is complete. Waiting for your opponent."
-        : secondsLeft === 0 ? "Time is up. Waiting for the server to end the round."
+    const phaseMessage = !game ? "Loading Match…"
+        : game.status === "finished" ? ""
+        : game.roundPhase === "reveal" ? "Round complete."
+        : game.finishedRound ? "Waiting for your opponent."
+        : secondsLeft === 0 ? "Time is up."
         : "Guess the song or skip for a longer clue.";
 
     return (
         <ListeningRoom inGame connection={connection}>
             <header className="lr-game-heading">
                 <div>
-                    <span className="lr-eyebrow">Drop the needle. Trust your ears.</span>
-                    <h1>{game?.status === "finished" ? "That's a wrap." : "Does this ring a bell?"}</h1>
+                    <h1>{game?.status === "finished" ? "I can't do Nathan." : "Guess the song."}</h1>
                 </div>
                 <div className="lr-clock" role="timer" aria-label="Time remaining">
                     <span>{game?.roundPhase === "guessing" ? "TIME LEFT" : "THE MATCH"}</span>
                     <b>{game?.roundPhase === "guessing" ? `00:${String(secondsLeft).padStart(2, "0")}` : "—"}</b>
-                    <span>{game ? `ROUND ${game.roundNumber} / 02` : "CONNECTING"}</span>
                 </div>
             </header>
 
@@ -289,7 +287,6 @@ function GameRoom({ roomId }: { roomId: string }) {
                                     </div>
                                 ))}
                             </div>
-                            <p className="lr-instructions">Listen closely, then choose your song. A longer clue gives you more to go on, but fewer available points.</p>
                             <form onSubmit={handleSubmitGuess}>
                                 <SongSearch songs={songs} query={songQuery} selectedId={songId} disabled={!canAct}
                                     onChange={(query, id) => { setSongQuery(query); setSongId(id); }} />
@@ -302,8 +299,7 @@ function GameRoom({ roomId }: { roomId: string }) {
                         </section>
                     ) : (
                         <section className="lr-player lr-results" aria-label="Match complete">
-                            <h2>Good listening.</h2>
-                            <p>Two rounds, a few familiar notes, and a friendly rivalry. Your final scores are on the board.</p>
+                            <h2>Run it back?</h2>
                             <Link href="/" className="lr-primary">Back to the lobby <span aria-hidden="true">↗</span></Link>
                         </section>
                     )}
@@ -318,7 +314,7 @@ function GameRoom({ roomId }: { roomId: string }) {
                                 <strong aria-label={`${score} points`}>{score.toLocaleString()}</strong>
                             </div>
                         ))}
-                        <div className="lr-score-note"><span className="lr-eyebrow">A little reminder</span><p>The shorter the clue,<br />the sweeter the score.</p></div>
+                        
                         <p className="lr-room-label">Room: {roomId}</p>
                     </aside>
                 </div>
