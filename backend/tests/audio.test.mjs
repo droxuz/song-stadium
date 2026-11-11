@@ -4,6 +4,7 @@ import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { clipAudio } from '../src/audio.ts';
 import { CLUES } from '../src/game.ts';
+import { readClueWaveform } from '../../frontend/song-stadium-web/src/lib/clue-waveform.ts';
 
 test('invalid clip durations and offsets are rejected before invoking FFmpeg', async () => {
     for (const duration of [0, -1, NaN, Infinity, 5.1]) {
@@ -46,5 +47,8 @@ test('FFmpeg produces exactly the permitted PCM samples for each clue without so
         assert.equal(sampleRate, Number(input.sample_rate), 'preserve source sample rate');
         assert.equal(pcmBytes, Math.round(sampleRate * seconds) * channels * 2);
         assert.equal(wav.includes(Buffer.from('Passionfruit')), false);
+        const waveform = readClueWaveform(wav.buffer.slice(wav.byteOffset, wav.byteOffset + wav.byteLength));
+        assert.equal(waveform.duration, seconds);
+        assert.equal(waveform.peaks.length, 128);
     }
 });

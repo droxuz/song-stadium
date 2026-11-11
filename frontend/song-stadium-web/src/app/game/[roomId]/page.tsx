@@ -7,7 +7,7 @@ import { useSocket } from "../../SocketProvider";
 import ClueAudio from "./ClueAudio";
 import SongSearch from "./SongSearch";
 import type { SongOption } from "@/lib/song-search";
-import { ListeningRoom, RecordArtwork, ClueWaveform } from "../../components/ListeningRoom";
+import { ListeningRoom } from "../../components/ListeningRoom";
 
 // Public response only. The correct song and private state stay on the backend.
 interface PlayerGameView {
@@ -264,22 +264,11 @@ function GameRoom({ roomId }: { roomId: string }) {
                                 <h2 className="lr-eyebrow">Your audio clue · {game.clueIndex + 1} of 5</h2>
                                 <span className="lr-pill">{game.clueSeconds} SECONDS</span>
                             </div>
-                            <div className="lr-player-art"><RecordArtwork /><ClueWaveform /></div>
-                            <div className="lr-playback">
-                                {socket?.connected && !error && !cancelled && game.roundPhase === "guessing" &&
-                                    !game.finishedRound && secondsLeft > 0 && (
-                                    <ClueAudio key={`${game.roundNumber}:${game.clueIndex}`} socket={socket}
-                                        roomId={roomId} roundNumber={game.roundNumber} clueIndex={game.clueIndex}
-                                        disabled={pending} volume={volume} />
-                                )}
-                                <label className="lr-volume" htmlFor="clue-volume">
-                                    <span>Volume</span>
-                                    <input id="clue-volume" type="range" min="0" max="100" step="1"
-                                        value={Math.round(volume * 100)} aria-valuetext={`${Math.round(volume * 100)} percent`}
-                                        onChange={event => setVolume(Number(event.target.value) / 100)} />
-                                    <span>{Math.round(volume * 100)}%</span>
-                                </label>
-                            </div>
+                            {socket && <ClueAudio key={`${game.roundNumber}:${game.clueIndex}`} socket={socket}
+                                roomId={roomId} roundNumber={game.roundNumber} clueIndex={game.clueIndex}
+                                disabled={!canAct} volume={volume} onVolumeChange={setVolume}
+                                available={Boolean(socket.connected && !error && !cancelled && game.roundPhase === "guessing" &&
+                                    !game.finishedRound && secondsLeft > 0)} />}
                             <div className="lr-clues" aria-label={`Clue ${game.clueIndex + 1} of 5`}>
                                 {[0.1, 0.2, 0.5, 1, 5].map((seconds, index) => (
                                     <div key={seconds} className={index <= game.clueIndex ? "unlocked" : undefined}>

@@ -35,9 +35,3 @@ export function RecordArtwork({ sleeve = false }: { sleeve?: boolean }) {
         {record}
     </div>;
 }
-
-export function ClueWaveform() {
-    return <div className="lr-waveform" aria-hidden="true">{Array.from({ length: 54 }, (_, i) =>
-        <i key={i} style={{ height: `${15 + Math.round(Math.abs(Math.sin(i * 1.7) * Math.cos(i * 0.43)) * 72)}%` }} />,
-    )}</div>;
-}

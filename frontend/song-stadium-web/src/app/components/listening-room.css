@@ -79,9 +79,15 @@
 .lr-record-art .lr-record-label { width: 45px; height: 45px; gap: 0; }
 .lr-record-art .lr-record-label :is(span, small) { display: none; }
 .lr-record-art .lr-record-label b { font-size: 7px; }
-.lr-waveform { height: 82px; display: flex; gap: 3px; align-items: center; color: var(--lr-orange); flex: 1; min-width: 0; }
-.lr-waveform i { flex: 1; min-width: 1px; background: currentColor; opacity: .7; border-radius: 1px; }
-.lr-waveform i:nth-child(n+24) { opacity: .22; }
+.lr-waveform-display { flex: 1; min-width: 0; color: var(--lr-orange); }
+.lr-waveform { display: block; height: 82px; width: 100%; overflow: hidden; }
+.lr-waveform rect { fill: currentColor; }
+.lr-waveform-baseline { stroke: currentColor; stroke-width: 1; opacity: .2; }
+.lr-waveform-unplayed { opacity: .45; }
+.lr-waveform-played { opacity: 1; }
+.lr-waveform-playhead { stroke: var(--lr-ink); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.lr-waveform-time { display: flex; justify-content: space-between; gap: 8px; margin-top: 8px; color: var(--lr-muted); font: 10px var(--font-geist-mono), monospace; }
+.lr-waveform-placeholder { flex: 1; min-width: 0; padding: 30px 0; color: var(--lr-muted); font-size: 12px; }
 .lr-playback { display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 20px; }
 .lr-audio-control { display: flex; flex-direction: column; align-items: start; gap: 12px; flex: 1; min-width: 160px; }
 .lr-play { display: flex; align-items: center; gap: 10px; font-size: 12px; }
@@ -173,7 +179,6 @@
     .lr-player { padding: 20px 16px; }
     .lr-player-art { gap: 22px; }
     .lr-record-art > .lr-record { width: 90px; height: 90px; }
-    .lr-waveform { gap: 2px; }
     .lr-game-heading h1 { font-size: 29px; }
     .lr-clock b { font-size: 25px; }
     .lr-match-card { padding: 24px; }
