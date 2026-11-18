@@ -164,6 +164,7 @@ export function registerQueueHandlers(
     elo: number,
     queue: QueueStore,
     lifecycle: {
+        beforeJoin?: (playerID: string) => Promise<void>;
         onQueued?: () => Promise<void>;
         onDisconnected?: (playerID: string) => Promise<void>;
     } = {},
@@ -181,10 +182,12 @@ export function registerQueueHandlers(
     socket.on('joinQueue', () => {
         schedule(async () => {
             if (!socket.connected) return;
+            await lifecycle.beforeJoin?.(playerID);
+            if (!socket.connected) return;
             const joined = await queue.join(playerID, elo, Date.now());
             if (!socket.connected) return;
             socket.emit(joined ? 'queueJoined' : 'queueError', {
-                message: joined ? 'Successfully joined the queue.' : 'Already queued or assigned to a match',
+                message: joined ? 'Successfully joined the queue.' : 'Already queued or assigned to a match', 
             });
             if (joined) {
                 try {

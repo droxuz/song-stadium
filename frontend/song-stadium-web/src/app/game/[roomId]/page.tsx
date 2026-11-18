@@ -7,7 +7,7 @@ import { useSocket } from "../../SocketProvider";
 import ClueAudio from "./ClueAudio";
 import SongSearch from "./SongSearch";
 import type { SongOption } from "@/lib/song-search";
-import { ListeningRoom, ConnectionStatus } from "../../components/ListeningRoom";
+import { ListeningRoom } from "../../components/ListeningRoom";
 
 // Public response only. The correct song and private state stay on the backend.
 interface PlayerGameView {
@@ -58,7 +58,6 @@ function GameRoom({ roomId }: { roomId: string }) {
     const [songQuery, setSongQuery] = useState("");
     const [songs, setSongs] = useState<SongOption[]>([]);
     const [volume, setVolume] = useState(0.5);
-    const [connection, setConnection] = useState("Connecting to the server…");
     const [error, setError] = useState<string | null>(null);
     const [feedback, setFeedback] = useState("");
     const [pending, setPending] = useState(false);
@@ -74,7 +73,6 @@ function GameRoom({ roomId }: { roomId: string }) {
 
         function handleGetState() {
             if (!socket?.connected) return;
-            setConnection("Connected");
             setError(null);
             clearTimeout(stateTimeout);
             stateTimeout = setTimeout(() => {
@@ -149,7 +147,6 @@ function GameRoom({ roomId }: { roomId: string }) {
             actionPending.current = false;
             setPending(false);
             setGame(null);
-            setConnection("Disconnected");
             setError("Connection lost. Your current match cannot be restored automatically.");
         }
 
@@ -234,34 +231,33 @@ function GameRoom({ roomId }: { roomId: string }) {
         <ListeningRoom inGame>
             <header className="lr-game-heading">
                 <div>
-                    <h1>{game?.status === "finished" ? "I can't do Nathan." : "Guess the song."}</h1>
+                    <h1>{cancelled ? "Opponent left." : game?.status === "finished" ? "I can't do Nathan." : "Guess the song."}</h1> 
                 </div>
-                <div className="lr-clock" role="timer" aria-label="Time remaining">
+                {!cancelled && <div className="lr-clock" role="timer" aria-label="Time remaining">
                     <span>{game?.roundPhase === "guessing" ? "TIME LEFT" : "THE MATCH"}</span>
                     <b>{game?.roundPhase === "guessing" ? `00:${String(secondsLeft).padStart(2, "0")}` : "—"}</b>
-                </div>
+                </div>}
             </header>
 
             {error ? (
                 <section className="lr-error" aria-label="Game unavailable">
-                    <div className="lr-card-status"><ConnectionStatus connection={connection} /></div>
                     <p role="alert">{error}</p>
-                    {!cancelled && (
-                        <button type="button" className="lr-secondary" disabled={!socket?.connected}
-                            onClick={() => setRequestVersion(version => version + 1)}>
-                            Load game again
-                        </button>
-                    )}
-                </section>
-            ) : (
-                <p className="lr-phase" role="status" aria-live="polite">{phaseMessage}</p>
-            )}
+                    <div className="lr-match-actions">
+                        {cancelled ? (
+                            <Link href="/?requeue=1" className="lr-primary">Requeue?</Link>
+                        ) : (
+                            <button type="button" className="lr-secondary" disabled={!socket?.connected}
+                                onClick={() => setRequestVersion(version => version + 1)}>
+                                Load game again
+                            </button>
+                        )}
+                    </div>
+                </section>):""}
 
             {game && (
                 <div className="lr-game-grid">
                     {game.status === "playing" ? (
                         <section className="lr-player" aria-label="Song clue">
-                            <div className="lr-card-status"><ConnectionStatus connection={connection} /></div>
                             <div className="lr-card-heading">
                                 <h2 className="lr-eyebrow">Your audio clue · {game.clueIndex + 1} of 5</h2>
                                 <span className="lr-pill">{game.clueSeconds} SECONDS</span>
@@ -290,9 +286,10 @@ function GameRoom({ roomId }: { roomId: string }) {
                         </section>
                     ) : (
                         <section className="lr-player lr-results" aria-label="Match complete">
-                            <div className="lr-card-status"><ConnectionStatus connection={connection} /></div>
                             <h2>Run it back?</h2>
-                            <Link href="/" className="lr-primary">Back to the lobby <span aria-hidden="true">↗</span></Link>
+                            <div className="lr-match-actions">
+                                <Link href="/?requeue=1" className="lr-primary">Requeue</Link>
+                            </div>
                         </section>
                     )}
                     <aside className="lr-scoreboard" aria-label="Scores">

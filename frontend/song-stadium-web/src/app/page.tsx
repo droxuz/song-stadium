@@ -112,7 +112,7 @@ export default function Home() {
             <ConnectionStatus connection={status === 'idle' || status === 'queued' || status === 'matched' ? 'Connected' : status === 'connecting' ? 'Connecting…' : 'Disconnected'} />
             <span className="lr-pill">1 vs 1</span>
           </div>
-          <h2>{status === 'queued' ? 'Finding Opponent.' : status === 'matched' ? 'Match Ready.' : 'Classic Guess'}</h2>
+          <h2>{status === 'queued' ? 'In Queue.' : status === 'matched' ? 'Match Found.' : 'Classic Guess'}</h2>
           <div className="lr-match-specs"><span><b>02</b>Players</span><span><b>05</b>Clues</span><span><b>60s</b>Rounds</span></div>
           {status === 'queued' ? (
             <button type="button" className="lr-secondary" onClick={handleQueueDisconnection}>Leave queue <span aria-hidden="true">↗</span></button>
@@ -121,7 +121,6 @@ export default function Home() {
               {status === 'matched' ? 'Opening your match…' : status === 'connecting' ? 'Connecting…' : status === 'disconnected' ? 'Waiting for connection…' : 'Find a match'}<span aria-hidden="true">↗</span>
             </button>
           )}
-          <div className="lr-queue-message" role="status" aria-live="polite">{message}</div>
           {match && <p className="lr-room-label">Room: {match.roomId}<br />Players: {match.playerIDs.length} / 2</p>}
         </section>
       </div>

@@ -8,6 +8,8 @@ export function createLobbyManager(
     lifecycle: {
         onCreated?: (match: Match) => void;
         onCancelled?: (match: Match) => void;
+        isFinished?: (match: Match) => boolean;
+        onFinished?: (match: Match) => void;
     } = {},
 ) {
     let pending = Promise.resolve();
@@ -63,6 +65,17 @@ export function createLobbyManager(
     }
 
     return {
+        releaseFinishedMatch(playerID: string) {
+            return schedule(async () => {
+                const match = await queue.getMatch(playerID);
+                if (!match || !lifecycle.isFinished?.(match)) return;
+                // Keep final results readable until requeue, then release both
+                // players without treating a completed game as a cancellation.
+                await Promise.all(match.playerIDs.map(id => connectedPlayers.get(id)?.leave(match.roomId)));
+                await queue.releaseMatch(match);
+                lifecycle.onFinished?.(match);
+            });
+        },
         matchWaitingPlayers() {
             return schedule(async () => {
                 for (;;) {

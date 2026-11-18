@@ -161,6 +161,9 @@ export function createGameManager(
             for (const id of match.playerIDs) assignments.set(id, match.roomId);
             scheduleDeadline(game);
         },
+        isMatchFinished(match: Match) {
+            return games.get(match.roomId)?.status === 'finished';
+        },
         removeMatch,
         registerHandlers(socket: Socket, playerID: string) {
             function reject(message: string) {

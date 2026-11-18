@@ -24,7 +24,6 @@
 .lr-nav nav { grid-column: 3; justify-self: end; display: flex; gap: 28px; font-size: 13px; color: var(--lr-muted); }
 .lr-nav [aria-current="page"] { color: var(--lr-ink); }
 .lr-connection { display: flex; align-items: center; gap: 7px; font-size: 11px; color: var(--lr-muted); white-space: nowrap; }
-.lr-card-status { display: flex; justify-content: flex-end; margin-bottom: 16px; }
 .lr-connection i { flex: 0 0 8px; height: 8px; border-radius: 50%; background: var(--lr-muted); }
 .lr-connection[data-connection="Connected"] i { background: #287346; }
 .lr-connection[data-connection="Disconnected"] i { background: #CE1141; }
@@ -121,7 +120,7 @@
 .lr-score-note p { font: italic 25px/1.3 Georgia, serif; letter-spacing: -.5px; margin-top: 14px; }
 .lr-room-label { overflow-wrap: anywhere; font: 10px/1.8 var(--font-geist-mono), monospace; color: var(--lr-muted); margin-top: 32px; }
 .lr-error { padding: 25px; border: 1px solid var(--lr-orange); background: var(--lr-card); font-size: 14px; line-height: 1.8; margin-bottom: 25px; }
-.lr-error button { margin-top: 15px; }
+.lr-match-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
 .lr-results h2 { font: 36px Georgia, serif; margin-bottom: 15px; }
 .lr-results p { font-size: 13px; color: var(--lr-muted); line-height: 1.8; margin-bottom: 25px; }
 .lr-song-search { position: relative; }

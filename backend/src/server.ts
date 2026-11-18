@@ -28,6 +28,8 @@ const queue = createQueueStore(redis);
 const lobbies = createLobbyManager(io, connectedPlayers, queue, {
     onCreated: games.startMatch,
     onCancelled: games.removeMatch,
+    isFinished: games.isMatchFinished,
+    onFinished: games.removeMatch,
 });
 
 redis.on('error', (error) => {
@@ -64,6 +66,7 @@ io.on('connection', (socket) => {
     });
 
     registerQueueHandlers(socket, playerID, elo, queue, {
+        beforeJoin: lobbies.releaseFinishedMatch,
         onQueued: lobbies.matchWaitingPlayers,
         onDisconnected: lobbies.playerDisconnected,
     });

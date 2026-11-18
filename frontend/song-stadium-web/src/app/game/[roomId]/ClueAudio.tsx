@@ -120,7 +120,7 @@ export default function ClueAudio({ socket, roomId, roundNumber, clueIndex, disa
                     {available && <>
                         <button type="button" onClick={play} disabled={disabled || !source} className="lr-play">
                             <span aria-hidden="true">▶</span>
-                            {source ? "Play / replay clue" : "Loading audio…"}
+                            {source ? "" : "Loading audio…"}
                         </button>
                         {error && <div role="alert" className="lr-audio-error">
                             <p>{error}</p>
