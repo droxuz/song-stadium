@@ -1,5 +1,5 @@
 "use client"
-import { ListeningRoom, RecordArtwork } from "./components/ListeningRoom";
+import { ListeningRoom, ConnectionStatus } from "./components/ListeningRoom";
 import {useEffect, useState} from 'react';
 import { useSocket } from './SocketProvider';
 import { useRouter } from "next/navigation";
@@ -105,19 +105,14 @@ export default function Home() {
   };
 
   return (
-    <ListeningRoom connection={status === 'idle' || status === 'queued' || status === 'matched' ? 'Connected' : status === 'connecting' ? 'Connecting…' : 'Disconnected'}>
-      <div className="lr-lobby">
-        <section className="lr-hero" aria-label="Welcome to Song Stadium">
-          <span className="lr-eyebrow">For the ones who know ball</span>
-          <h1>A familiar sound.<br /><em>A friendly rivalry.</em></h1>
-          <p>From the top of the billboard to underground tracks. Put your knowledge to the test.</p>
-          <RecordArtwork sleeve />
-          <span className="lr-record-caption"></span>
-        </section>
+    <ListeningRoom>
+      <div className="lr-lobby lr-lobby-centered">
         <section className="lr-match-card" aria-label="Matchmaking">
-          <div className="lr-card-heading"><span className="lr-eyebrow"></span><span className="lr-pill">1 vs 1</span></div>
-          <h2>{status === 'queued' ? 'Finding your opponent.' : status === 'matched' ? 'Your match is ready.' : 'Good ears. Better knowledge.'}</h2>
-          <p>{status === 'queued' ? 'We’re finding your opponent for the match.' : 'Challenge your opponent. Hear a tiny clip. Test your knowledge.'}</p>
+          <div className="lr-card-heading">
+            <ConnectionStatus connection={status === 'idle' || status === 'queued' || status === 'matched' ? 'Connected' : status === 'connecting' ? 'Connecting…' : 'Disconnected'} />
+            <span className="lr-pill">1 vs 1</span>
+          </div>
+          <h2>{status === 'queued' ? 'Finding Opponent.' : status === 'matched' ? 'Match Ready.' : 'Classic Guess'}</h2>
           <div className="lr-match-specs"><span><b>02</b>Players</span><span><b>05</b>Clues</span><span><b>60s</b>Rounds</span></div>
           {status === 'queued' ? (
             <button type="button" className="lr-secondary" onClick={handleQueueDisconnection}>Leave queue <span aria-hidden="true">↗</span></button>

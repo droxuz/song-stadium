@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Socket } from "socket.io-client";
-import { RecordArtwork } from "../../components/ListeningRoom";
 import { readClueWaveform, type ClueWaveformData } from "@/lib/clue-waveform";
 import ClueWaveform from "./ClueWaveform";
 
@@ -117,10 +116,6 @@ export default function ClueAudio({ socket, roomId, roundNumber, clueIndex, disa
                 onEnded={() => { setPlaying(false); setProgress(1); }}
                 onError={() => { if (available) setError("Could not play this audio. Please retry loading it."); }} />
             <div className="lr-player-art">
-                <RecordArtwork />
-                <ClueWaveform data={waveform} progress={progress} unavailable={waveformError || Boolean(error) || !available} />
-            </div>
-            <div className="lr-playback">
                 <div className="lr-audio-control">
                     {available && <>
                         <button type="button" onClick={play} disabled={disabled || !source} className="lr-play">
@@ -140,6 +135,9 @@ export default function ClueAudio({ socket, roomId, roundNumber, clueIndex, disa
                         </div>}
                     </>}
                 </div>
+                <ClueWaveform data={waveform} progress={progress} unavailable={waveformError || Boolean(error) || !available} />
+            </div>
+            <div className="lr-playback">
                 <label className="lr-volume" htmlFor="clue-volume">
                     <span>Volume</span>
                     <input id="clue-volume" type="range" min="0" max="100" step="1"

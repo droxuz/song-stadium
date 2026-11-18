@@ -2,30 +2,24 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import "./listening-room.css";
 
-export function ListeningRoom({ children, inGame = false, connection }: {
+export function ListeningRoom({ children, inGame = false }: {
     children: ReactNode;
     inGame?: boolean;
-    connection: string;
 }) {
     return <div className="listening-room">
         <header className="lr-nav">
-            <Link href="/" className="lr-wordmark" aria-label="Song Stadium home">
-                <svg viewBox="0 0 28 28" aria-hidden="true"><path d="M3 17V11M8 22V6M14 26V2M20 22V6M25 17V11" /></svg>
+            <Link href="/" className="lr-wordmark" aria-label="The 6ix Sense home">
                 The 6ix Sense<span>.</span>
             </Link>
-            <nav aria-label="Main navigation">
-                <Link href="/" aria-current={!inGame ? "page" : undefined}>Lobby</Link>
-            </nav>
-            <span className="lr-connection" data-connection={connection} role="status">
-                <i aria-hidden="true" />{connection}
-            </span>
         </header>
         <main className="lr-main">{children}</main>
-        <footer className="lr-footer">
-            <span>TORONTO ROOTS. WORLDWIDE EARS.</span>
-            <span>THE 6IX SENSE © 2026</span>
-        </footer>
     </div>;
+}
+
+export function ConnectionStatus({ connection }: { connection: string }) {
+    return <span className="lr-connection" data-connection={connection} role="status">
+        <i aria-hidden="true" />{connection}
+    </span>;
 }
 
 export function RecordArtwork({ sleeve = false }: { sleeve?: boolean }) {

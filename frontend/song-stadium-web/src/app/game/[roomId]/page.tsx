@@ -7,7 +7,7 @@ import { useSocket } from "../../SocketProvider";
 import ClueAudio from "./ClueAudio";
 import SongSearch from "./SongSearch";
 import type { SongOption } from "@/lib/song-search";
-import { ListeningRoom } from "../../components/ListeningRoom";
+import { ListeningRoom, ConnectionStatus } from "../../components/ListeningRoom";
 
 // Public response only. The correct song and private state stay on the backend.
 interface PlayerGameView {
@@ -39,7 +39,7 @@ export default function GamePage() {
         roomId = decodeURIComponent(routeRoomId);
     } catch {
         return (
-            <ListeningRoom inGame connection="Invalid game link">
+            <ListeningRoom inGame>
                 <section className="lr-error">
                     <p role="alert">This game link is invalid.</p>
                     <Link href="/" className="lr-text-button">Back to the lobby</Link>
@@ -57,7 +57,7 @@ function GameRoom({ roomId }: { roomId: string }) {
     const [songId, setSongId] = useState("");
     const [songQuery, setSongQuery] = useState("");
     const [songs, setSongs] = useState<SongOption[]>([]);
-    const [volume, setVolume] = useState(0.7);
+    const [volume, setVolume] = useState(0.5);
     const [connection, setConnection] = useState("Connecting to the server…");
     const [error, setError] = useState<string | null>(null);
     const [feedback, setFeedback] = useState("");
@@ -231,7 +231,7 @@ function GameRoom({ roomId }: { roomId: string }) {
         : "Guess the song or skip for a longer clue.";
 
     return (
-        <ListeningRoom inGame connection={connection}>
+        <ListeningRoom inGame>
             <header className="lr-game-heading">
                 <div>
                     <h1>{game?.status === "finished" ? "I can't do Nathan." : "Guess the song."}</h1>
@@ -244,6 +244,7 @@ function GameRoom({ roomId }: { roomId: string }) {
 
             {error ? (
                 <section className="lr-error" aria-label="Game unavailable">
+                    <div className="lr-card-status"><ConnectionStatus connection={connection} /></div>
                     <p role="alert">{error}</p>
                     {!cancelled && (
                         <button type="button" className="lr-secondary" disabled={!socket?.connected}
@@ -260,6 +261,7 @@ function GameRoom({ roomId }: { roomId: string }) {
                 <div className="lr-game-grid">
                     {game.status === "playing" ? (
                         <section className="lr-player" aria-label="Song clue">
+                            <div className="lr-card-status"><ConnectionStatus connection={connection} /></div>
                             <div className="lr-card-heading">
                                 <h2 className="lr-eyebrow">Your audio clue · {game.clueIndex + 1} of 5</h2>
                                 <span className="lr-pill">{game.clueSeconds} SECONDS</span>
@@ -288,6 +290,7 @@ function GameRoom({ roomId }: { roomId: string }) {
                         </section>
                     ) : (
                         <section className="lr-player lr-results" aria-label="Match complete">
+                            <div className="lr-card-status"><ConnectionStatus connection={connection} /></div>
                             <h2>Run it back?</h2>
                             <Link href="/" className="lr-primary">Back to the lobby <span aria-hidden="true">↗</span></Link>
                         </section>
