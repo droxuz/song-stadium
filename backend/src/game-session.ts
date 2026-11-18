@@ -6,7 +6,7 @@ import {
     createGameState, finishRound, getPlayerView, skipClue, startRound, submitGuess,
     CLUES, type GameState,
 } from './game.js';
-import { clipAudio } from './audio.js';
+import { prepareClueAudio } from './audio.js';
 import { resolve } from "node:path";
 import { fileURLToPath } from 'node:url';
 import { songSuggestions } from './song-catalog.js';
@@ -38,10 +38,10 @@ export function selectSongFromCatalog(_roundNumber: number, previousSongId?: str
     return candidates[randomInt(candidates.length)]!;
 }
 
-async function loadClueAudio(songId: string, seconds: number): Promise<Buffer> {
+async function loadSongAudio(songId: string): Promise<readonly Buffer[]> {
     const song = songs.find(song => String(song['song-id']) === songId);
     if (!song) throw new Error('Selected song is missing');
-    return clipAudio(resolve(backendDirectory, '.' + song['song-link']), seconds, 0);
+    return prepareClueAudio(resolve(backendDirectory, '.' + song['song-link']));
 }
 
 export function createGameManager(
@@ -49,14 +49,33 @@ export function createGameManager(
     selectSong: (roundNumber: number, previousSongId?: string) => string = selectSongFromCatalog,
     roundDuration = 120_000,
     revealDuration = 3_000,
-    loadAudio: (songId: string, seconds: number) => Promise<Buffer> = loadClueAudio,
+    loadAudio: (songId: string) => Promise<readonly Buffer[]> = loadSongAudio,
 ) {
     // Private to this backend process. Neither map is exposed through socket events.
     const games = new Map<string, GameState>();
     const assignments = new Map<string, string>();
     const timers = new Map<string, ReturnType<typeof setTimeout>>();
-    // At most five clips per active round; concurrent requests share FFmpeg work.
-    const clips = new Map<GameState, Map<number, Promise<Buffer>>>();
+    // One private set of five clips per song, reused across players and matches.
+    const clips = new Map<string, Promise<readonly Buffer[]>>();
+
+    function getSongAudio(songId: string): Promise<readonly Buffer[]> {
+        let preparation = clips.get(songId);
+        if (!preparation) {
+            preparation = Promise.resolve().then(() => loadAudio(songId)).then(audio => {
+                if (audio.length !== CLUES.length || audio.some(clip => !Buffer.isBuffer(clip) || !clip.length)) {
+                    throw new Error('Audio preparation must return all five clue clips.');
+                }
+                return audio;
+            });
+            clips.set(songId, preparation);
+            const pending = preparation;
+            void pending.catch(() => {
+                // A failed preparation is retryable, without evicting a newer one.
+                if (clips.get(songId) === pending) clips.delete(songId);
+            });
+        }
+        return preparation;
+    }
 
     function clearTimer(roomId: string) {
         const timer = timers.get(roomId);
@@ -91,7 +110,6 @@ export function createGameManager(
     function completeRound(game: GameState) {
         const result = finishRound(game, game.roundNumber);
         if (!result.accepted) return;
-        clips.delete(game);
         clearTimer(game.roomId);
         // finishRound returns the answer for server use; only the public view is emitted.
         publish(game);
@@ -121,8 +139,6 @@ export function createGameManager(
 
     function removeMatch(match: Match) {
         clearTimer(match.roomId);
-        const game = games.get(match.roomId);
-        if (game) clips.delete(game);
         games.delete(match.roomId);
         for (const id of match.playerIDs) {
             if (assignments.get(id) === match.roomId) assignments.delete(id);
@@ -130,6 +146,11 @@ export function createGameManager(
     }
 
     return {
+        async prepareAudio() {
+            // Startup warm-up is sequential to avoid spawning FFmpeg for the
+            // entire catalog at once. No game audio is sent to clients here.
+            for (const songId of songIDs) await getSongAudio(songId);
+        },
         startMatch(match: Match) {
             if (games.has(match.roomId)) return;
             if (match.playerIDs.some(id => assignments.has(id))) {
@@ -221,19 +242,9 @@ export function createGameManager(
                     socket.emit('clueAudioError', { ...identity, message: 'This clue is no longer available.' });
                     return;
                 }
-                let cache = clips.get(game);
-                if (!cache) {
-                    cache = new Map();
-                    clips.set(game, cache);
-                }
                 try {
-                    let audio = cache.get(clueIndex);
-                    if (!audio) {
-                        // Neither duration nor song path is ever taken from the request.
-                        audio = loadAudio(game.correctSongId, CLUES[clueIndex]!.seconds);
-                        cache.set(clueIndex, audio);
-                    }
-                    const bytes = await audio;
+                    const audio = await getSongAudio(game.correctSongId);
+                    const bytes = audio[clueIndex]!;
                     // The player may have skipped, disconnected, or finished during FFmpeg.
                     if (!isCurrent()) return;
                     socket.emit('clueAudio', {
@@ -241,7 +252,6 @@ export function createGameManager(
                         mimeType: 'audio/wav', audio: bytes,
                     });
                 } catch (error) {
-                    cache.delete(clueIndex);
                     console.error('Could not prepare clue audio:', error);
                     if (isCurrent()) socket.emit('clueAudioError', {
                         ...identity, message: 'Could not load your clue. Please retry.',

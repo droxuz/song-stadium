@@ -5,7 +5,7 @@ import { Server } from 'socket.io';
 import { io as connectClient } from 'socket.io-client';
 import { createGameManager, selectSongFromCatalog } from '../src/game-session.ts';
 import { readFile } from 'node:fs/promises';
-import { createGameState, getPlayerView, TOTAL_ROUNDS } from '../src/game.ts';
+import { createGameState, getPlayerView, TOTAL_ROUNDS, CLUES } from '../src/game.ts';
 import { createLobbyManager } from '../src/lobby.ts';
 
 function nextEvent(socket, event) {
@@ -272,9 +272,9 @@ test('disconnect immediately removes the private game', async t => {
 
 test('audio uses only the requesting player’s clue and matching scoring multiplier', async t => {
     const calls = [];
-    const app = await setup(t, { loadAudio: async (songId, seconds) => {
-        calls.push({ songId, seconds });
-        return Buffer.from(`clip:${seconds}`);
+    const app = await setup(t, { loadAudio: async songId => {
+        calls.push(songId);
+        return CLUES.map(({ seconds }) => Buffer.from(`clip:${seconds}`));
     } });
     const otherAudio = [];
     app.second.on('clueAudio', data => otherAudio.push(data));
@@ -292,8 +292,7 @@ test('audio uses only the requesting player’s clue and matching scoring multip
             await request(app.first, 'skipClue', { roomId: 'room-A', roundNumber: 1 }, 'clueResult');
         }
     }
-    assert.deepEqual(calls.map(call => call.seconds), durations);
-    assert.ok(calls.every(call => call.songId === 'secret-song-1'));
+    assert.deepEqual(calls, ['secret-song-1'], 'all five intervals must be prepared just once');
     const own = await request(app.first, 'submitGuess', {
         roomId: 'room-A', roundNumber: 1, songId: 'secret-song-1',
     }, 'guessResult');
@@ -307,7 +306,7 @@ test('audio uses only the requesting player’s clue and matching scoring multip
 
 test('foreign, future, stale, and finished audio requests never invoke the loader', async t => {
     let loads = 0;
-    const app = await setup(t, { loadAudio: async () => { loads++; return Buffer.from('clip'); } });
+    const app = await setup(t, { loadAudio: async () => { loads++; return CLUES.map(() => Buffer.from('clip')); } });
     const outsider = await app.connect();
     const identity = { roomId: 'room-A', roundNumber: 1, clueIndex: 0 };
     assert.ok((await request(outsider, 'getClueAudio', identity, 'gameError')).message);
@@ -345,18 +344,21 @@ test('delayed audio is discarded after a skip and cached work is shared', async 
     await request(app.second, 'getGameState', { roomId: 'room-A' }, 'gameState');
     await request(app.first, 'skipClue', { roomId: 'room-A', roundNumber: 1 }, 'clueResult');
     const received = nextEvent(app.second, 'clueAudio');
-    resolveAudio(Buffer.from('clip'));
+    resolveAudio(CLUES.map(({ seconds }) => Buffer.from(`clip:${seconds}`)));
     await received;
     await request(app.first, 'getGameState', { roomId: 'room-A' }, 'gameState');
     assert.equal(loads, 1);
     assert.deepEqual(firstAudio, []);
+    const next = await request(app.first, 'getClueAudio', { ...identity, clueIndex: 1 }, 'clueAudio');
+    assert.equal(next.audio.toString(), 'clip:0.2');
+    assert.equal(loads, 1, 'skipping must reuse the already prepared intervals');
 });
 
 test('failed audio can be retried without changing progress or score', async t => {
     let attempts = 0;
     const app = await setup(t, { loadAudio: async () => {
         if (++attempts === 1) throw new Error('test decoder failure');
-        return Buffer.from('clip');
+        return CLUES.map(() => Buffer.from('clip'));
     } });
     const identity = { roomId: 'room-A', roundNumber: 1, clueIndex: 0 };
     assert.ok((await request(app.first, 'getClueAudio', identity, 'clueAudioError')).message);
@@ -369,7 +371,7 @@ test('failed audio can be retried without changing progress or score', async t =
 test('a new round loads its own song and rejects the previous round’s audio', async t => {
     const app = await setup(t, {
         revealDuration: 10,
-        loadAudio: async songId => Buffer.from(songId),
+        loadAudio: async songId => CLUES.map(() => Buffer.from(songId)),
     });
     const identity = { roomId: 'room-A', roundNumber: 1, clueIndex: 0 };
     const initial = await request(app.first, 'getClueAudio', identity, 'clueAudio');
@@ -391,4 +393,44 @@ test('a new round loads its own song and rejects the previous round’s audio', 
     assert.ok((await request(app.first, 'getClueAudio', identity, 'clueAudioError')).message);
     const next = await request(app.first, 'getClueAudio', { ...identity, roundNumber: 2 }, 'clueAudio');
     assert.equal(next.audio.toString(), 'secret-song-2');
+});
+
+test('startup warm-up prepares each catalog song once and skips only select cached clips', async t => {
+    const calls = [];
+    const app = await setup(t, { start: false, selectSong: () => '1', loadAudio: async songId => {
+        calls.push(songId);
+        return CLUES.map(({ seconds }) => Buffer.from(`${songId}:${seconds}`));
+    } });
+    await Promise.all([app.manager.prepareAudio(), app.manager.prepareAudio()]);
+    const catalog = JSON.parse(await readFile(new URL('../music/music-stub.json', import.meta.url), 'utf8'));
+    assert.deepEqual(calls, [...new Set(catalog.map(song => String(song['song-id'])))]);
+    const prepared = calls.length;
+    for (const socket of app.players.values()) await socket.join(app.match.roomId);
+    app.manager.startMatch(app.match);
+    for (let clueIndex = 0; clueIndex < CLUES.length; clueIndex++) {
+        const clip = await request(app.first, 'getClueAudio', {
+            roomId: app.match.roomId, roundNumber: 1, clueIndex,
+        }, 'clueAudio');
+        assert.equal(clip.audio.toString(), `1:${CLUES[clueIndex].seconds}`);
+        if (clueIndex < CLUES.length - 1) await request(app.first, 'skipClue', {
+            roomId: app.match.roomId, roundNumber: 1,
+        }, 'clueResult');
+    }
+    assert.equal(calls.length, prepared);
+    app.manager.removeMatch(app.match);
+    app.manager.startMatch(app.match);
+    await request(app.second, 'getClueAudio', { roomId: app.match.roomId, roundNumber: 1, clueIndex: 0 }, 'clueAudio');
+    assert.equal(calls.length, prepared, 'new matches must reuse song clips too');
+});
+
+test('an incomplete set is rejected and its failed preparation is evicted for retry', async t => {
+    let calls = 0;
+    const app = await setup(t, { loadAudio: async () => ++calls === 1
+        ? [Buffer.from('only one clue')]
+        : CLUES.map(() => Buffer.from('clip')),
+    });
+    const identity = { roomId: app.match.roomId, roundNumber: 1, clueIndex: 0 };
+    assert.ok((await request(app.first, 'getClueAudio', identity, 'clueAudioError')).message);
+    assert.equal((await request(app.first, 'getClueAudio', identity, 'clueAudio')).audio.toString(), 'clip');
+    assert.equal(calls, 2);
 });

@@ -39,6 +39,8 @@ app.get('/health', (_req, res) => {
 });
 
 async function startServer() {
+    await games.prepareAudio();
+    console.log('All song clue intervals prepared.');
     await redis.connect();
     console.log("Redis Connected: ", await redis.ping());
     server.listen(PORT, () => {
