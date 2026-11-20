@@ -1,23 +1,23 @@
 "use client"
 import{createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import{io, type Socket} from 'socket.io-client'
+import { usePathname } from 'next/navigation';
 
 const SocketContext = createContext<Socket | null>(null);
 
 export function SocketProvider({children}: {children: ReactNode}){
-    const [socket, setSocket] = useState<Socket | null>(null);
+    const pathname = usePathname();
+    const preview = process.env.NODE_ENV === 'development' && pathname === '/dev/game';
+    const [socket] = useState(() => io("http://localhost:3001", {autoConnect: false}));
     useEffect(() => {
-        const connection = io("http://localhost:3001", {autoConnect: false});
-
-        setSocket(connection)
-        connection.connect();
+        if (preview) return;
+        socket.connect();
 
         return () => {
-            connection.disconnect()
-            connection.removeAllListeners()
+            socket.disconnect()
         };
-    }, []);
-    return(<SocketContext.Provider value={socket}>{children}</SocketContext.Provider>)
+    }, [preview, socket]);
+    return(<SocketContext.Provider value={preview ? null : socket}>{children}</SocketContext.Provider>)
 }
 
 export function useSocket() {

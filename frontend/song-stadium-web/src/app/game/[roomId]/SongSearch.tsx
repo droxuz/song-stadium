@@ -36,7 +36,6 @@ export default function SongSearch({ songs, query, selectedId, disabled, onChang
     }
 
     return <div className="lr-song-search">
-        <label htmlFor="song-guess">What’s on the turntable?</label>
         <input id="song-guess" role="combobox" aria-autocomplete="list" aria-expanded={visible}
             aria-controls={listId} aria-activedescendant={visible && matches[activeIndex] ? `${listId}-${activeIndex}` : undefined}
             aria-describedby={`${listId}-help`} value={query} maxLength={200} autoComplete="off"
@@ -61,8 +60,5 @@ export default function SongSearch({ songs, query, selectedId, disabled, onChang
             </li>)}
             {!matches.length && <li>No matching songs. Try another title.</li>}
         </ul>}
-        <p id={`${listId}-help`} className="lr-song-help" aria-live="polite">
-            {selectedId ? `Selected: ${query}` : "Choose a suggestion, then submit your guess. Use arrow keys and Enter to select."}
-        </p>
     </div>;
 }

@@ -1,23 +1,18 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { Socket } from "socket.io-client";
+import type { ClueIdentity, GameConnection } from "@/lib/game-connection";
 import { readClueWaveform, type ClueWaveformData } from "@/lib/clue-waveform";
 import ClueWaveform from "./ClueWaveform";
 
-interface ClueIdentity {
-    roomId: string;
-    roundNumber: number;
-    clueIndex: number;
-}
-
 // Mounted with a new key for each clue. URLs and playback belong only to this browser.
-export default function ClueAudio({ socket, roomId, roundNumber, clueIndex, disabled, volume, available, onVolumeChange }: ClueIdentity & {
-    socket: Socket;
+export default function ClueAudio({ socket, roomId, roundNumber, clueIndex, disabled, volume, available, onVolumeChange, onSkip }: ClueIdentity & {
+    socket: GameConnection;
     disabled: boolean;
     volume: number;
     available: boolean;
     onVolumeChange: (volume: number) => void;
+    onSkip: () => void;
 }) {
     const audio = useRef<HTMLAudioElement>(null);
     const [source, setSource] = useState<string | null>(null);
@@ -116,35 +111,44 @@ export default function ClueAudio({ socket, roomId, roundNumber, clueIndex, disa
                 onEnded={() => { setPlaying(false); setProgress(1); }}
                 onError={() => { if (available) setError("Could not play this audio. Please retry loading it."); }} />
             <div className="lr-player-art">
-                <div className="lr-audio-control">
-                    {available && <>
-                        <button type="button" onClick={play} disabled={disabled || !source} className="lr-play">
-                            <span aria-hidden="true">▶</span>
-                            {source ? "" : "Loading audio…"}
+                <ClueWaveform data={waveform} progress={progress}
+                    unavailable={waveformError || Boolean(error) || !available} />
+                <div className="lr-playback">
+                    <div className="lr-audio-control" role="group" aria-label="Clue playback">
+                        <button type="button" onClick={play} disabled={disabled || !source || !available}
+                            className="lr-play" aria-label="Play clue" title="Play clue">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <path d="M8 5v14l11-7z" fill="currentColor" />
+                            </svg>
                         </button>
-                        {error && <div role="alert" className="lr-audio-error">
-                            <p>{error}</p>
-                            <button type="button" className="lr-text-button" disabled={disabled} onClick={() => {
-                                setSource(null);
-                                setError(null);
-                                setWaveform(null);
-                                setWaveformError(false);
-                                setProgress(0);
-                                setRetry(value => value + 1);
-                            }}>Retry loading audio</button>
-                        </div>}
-                    </>}
+                        <button type="button" onClick={onSkip} disabled={disabled || !available}
+                            className="lr-play lr-skip" aria-label="Skip clue" title="Skip clue">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <path d="M5 5v14l10-7z" fill="currentColor" />
+                                <path d="M18 5v14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                            </svg>
+                        </button>
+                    </div>
+                    <label className="lr-volume" htmlFor="clue-volume">
+                        <span>Volume</span>
+                        <input id="clue-volume" type="range" min="0" max="100" step="1"
+                            value={Math.round(volume * 100)} aria-valuetext={`${Math.round(volume * 100)} percent`}
+                            onChange={event => onVolumeChange(Number(event.target.value) / 100)} />
+                        <span>{Math.round(volume * 100)}%</span>
+                    </label>
                 </div>
-                <ClueWaveform data={waveform} progress={progress} unavailable={waveformError || Boolean(error) || !available} />
-            </div>
-            <div className="lr-playback">
-                <label className="lr-volume" htmlFor="clue-volume">
-                    <span>Volume</span>
-                    <input id="clue-volume" type="range" min="0" max="100" step="1"
-                        value={Math.round(volume * 100)} aria-valuetext={`${Math.round(volume * 100)} percent`}
-                        onChange={event => onVolumeChange(Number(event.target.value) / 100)} />
-                    <span>{Math.round(volume * 100)}%</span>
-                </label>
+                {available && !source && !error && <p role="status" className="lr-audio-status">Loading audio…</p>}
+                {error && available && <div role="alert" className="lr-audio-error">
+                    <p>{error}</p>
+                    <button type="button" className="lr-text-button" disabled={disabled} onClick={() => {
+                        setSource(null);
+                        setError(null);
+                        setWaveform(null);
+                        setWaveformError(false);
+                        setProgress(0);
+                        setRetry(value => value + 1);
+                    }}>Retry loading audio</button>
+                </div>}
             </div>
         </>
     );
