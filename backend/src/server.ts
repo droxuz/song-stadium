@@ -9,7 +9,7 @@ import { createGameManager } from './game-session.js';
 
 const app = express();
 const server = createServer(app);
-const PORT = 3001;
+const PORT = 3001; //Need to change
 const connectedPlayers = new Map<string, Socket>();
 const roundDuration = 60 * 1000; // Duration 
 const games = createGameManager(connectedPlayers, undefined, roundDuration);
@@ -17,12 +17,12 @@ const games = createGameManager(connectedPlayers, undefined, roundDuration);
 // Creates URLs to listen to
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:3000"
+        origin: "http://localhost:3000" //Need to Change
     }
 })
 
 const redis = createClient({
-    url: process.env.REDIS_URL ?? "redis://127.0.0.1:6379",
+    url: process.env.REDIS_URL ?? "redis://127.0.0.1:6379", //Need to change
 });
 const queue = createQueueStore(redis);
 const lobbies = createLobbyManager(io, connectedPlayers, queue, {

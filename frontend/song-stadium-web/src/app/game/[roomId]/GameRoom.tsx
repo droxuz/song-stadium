@@ -89,7 +89,7 @@ export default function GameRoom({ roomId, connection, onRequeue }: {
             } else {
                 setFeedback(data.finishedRound
                     ? "No clues left. Waiting for the round to finish."
-                    : "Your next clue is ready.");
+                    : "");
             }
         }
 

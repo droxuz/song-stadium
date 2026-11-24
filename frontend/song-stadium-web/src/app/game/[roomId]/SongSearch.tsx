@@ -39,7 +39,7 @@ export default function SongSearch({ songs, query, selectedId, disabled, onChang
         <input id="song-guess" role="combobox" aria-autocomplete="list" aria-expanded={visible}
             aria-controls={listId} aria-activedescendant={visible && matches[activeIndex] ? `${listId}-${activeIndex}` : undefined}
             aria-describedby={`${listId}-help`} value={query} maxLength={200} autoComplete="off"
-            placeholder={songs.length ? "Search Drake songs…" : "Loading song catalog…"}
+            placeholder={songs.length ? "Name the Track" : "Loading Catalog"}
             disabled={disabled || !songs.length} onKeyDown={onKeyDown}
             onFocus={() => { if (!selectedId) setOpen(true); }}
             onBlur={() => setOpen(false)}

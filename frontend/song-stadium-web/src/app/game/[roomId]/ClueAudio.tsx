@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import type { ClueIdentity, GameConnection } from "@/lib/game-connection";
 import { readClueWaveform, type ClueWaveformData } from "@/lib/clue-waveform";
 import ClueWaveform from "./ClueWaveform";
@@ -92,13 +92,21 @@ export default function ClueAudio({ socket, roomId, roundNumber, clueIndex, disa
         if (audio.current) audio.current.volume = volume;
     }, [volume]);
 
-    async function play() {
-        if (!audio.current || !source || disabled) return;
+    async function togglePlayback() {
+        const element = audio.current;
+        if (!element || !source || disabled) return;
+        if (!element.paused) {
+            element.pause();
+            return;
+        }
         try {
             setError(null);
-            setProgress(0);
-            audio.current.currentTime = 0;
-            await audio.current.play();
+            // Resume from the paused position; restart only once the clue has finished.
+            if (element.ended) {
+                setProgress(0);
+                element.currentTime = 0;
+            }
+            await element.play();
         } catch {
             setError("Could not play this clue. Try playing it again.");
         }
@@ -115,10 +123,13 @@ export default function ClueAudio({ socket, roomId, roundNumber, clueIndex, disa
                     unavailable={waveformError || Boolean(error) || !available} />
                 <div className="lr-playback">
                     <div className="lr-audio-control" role="group" aria-label="Clue playback">
-                        <button type="button" onClick={play} disabled={disabled || !source || !available}
-                            className="lr-play" aria-label="Play clue" title="Play clue">
+                        <button type="button" onClick={togglePlayback} disabled={disabled || !source || !available}
+                            className="lr-play" aria-label={playing ? "Pause clue" : "Play clue"}
+                            title={playing ? "Pause clue" : "Play clue"}>
                             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                                <path d="M8 5v14l11-7z" fill="currentColor" />
+                                {playing
+                                    ? <path d="M7 5h4v14H7zM13 5h4v14h-4z" fill="currentColor" />
+                                    : <path d="M8 5v14l11-7z" fill="currentColor" />}
                             </svg>
                         </button>
                         <button type="button" onClick={onSkip} disabled={disabled || !available}
@@ -129,7 +140,8 @@ export default function ClueAudio({ socket, roomId, roundNumber, clueIndex, disa
                             </svg>
                         </button>
                     </div>
-                    <label className="lr-volume" htmlFor="clue-volume">
+                    <label className="lr-volume" htmlFor="clue-volume"
+                        style={{ "--lr-volume-fill": `${Math.round(volume * 100)}%` } as CSSProperties}>
                         <span>Volume</span>
                         <input id="clue-volume" type="range" min="0" max="100" step="1"
                             value={Math.round(volume * 100)} aria-valuetext={`${Math.round(volume * 100)} percent`}
