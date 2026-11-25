@@ -1,5 +1,6 @@
 "use client"
 import { ListeningRoom, ConnectionStatus } from "./components/ListeningRoom";
+import { PixelSkyline } from "./components/PixelSkyline";
 import {useEffect, useState} from 'react';
 import { useSocket } from './SocketProvider';
 import { useRouter } from "next/navigation";
@@ -106,13 +107,15 @@ export default function Home() {
 
   return (
     <ListeningRoom>
-      <div className="lr-lobby lr-lobby-centered">
-        <section className="lr-match-card" aria-label="Matchmaking">
+      <PixelSkyline variant="night" className="pixel-skyline-hero" />
+      <div className="lr-lobby lr-lobby-centered lr-setup">
+        <section className="lr-match-card" aria-label="Matchmaking" data-status={status}>
           <div className="lr-card-heading">
             <ConnectionStatus connection={status === 'idle' || status === 'queued' || status === 'matched' ? 'Connected' : status === 'connecting' ? 'Connecting…' : 'Disconnected'} />
             <span className="lr-pill">1 vs 1</span>
           </div>
           <h2>{status === 'queued' ? 'In Queue.' : status === 'matched' ? 'Match Found.' : 'Classic Guess'}</h2>
+          <p>Guess the song. Every second counts.</p>
           <div className="lr-match-specs"><span><b>02</b>Players</span><span><b>05</b>Clues</span><span><b>60s</b>Rounds</span></div>
           {status === 'queued' ? (
             <button type="button" className="lr-secondary" onClick={handleQueueDisconnection}>Leave queue <span aria-hidden="true">↗</span></button>
@@ -123,6 +126,7 @@ export default function Home() {
           )}
           {match && <p className="lr-room-label">Room: {match.roomId}<br />Players: {match.playerIDs.length} / 2</p>}
         </section>
+        
       </div>
     </ListeningRoom>
   );

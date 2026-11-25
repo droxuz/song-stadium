@@ -193,11 +193,33 @@ export default function GameRoom({ roomId, connection, onRequeue }: {
 
     const secondsLeft = game ? Math.max(0, Math.ceil((game.roundEndsAt - now) / 1000)) : 0;
 
+    const finished = game?.status === "finished";
+    const myScore = game?.scores[game.playerID] ?? 0;
+    const opponentScore = game ? Math.max(0, ...Object.entries(game.scores)
+        .filter(([id]) => id !== game.playerID).map(([, score]) => score)) : 0;
+    const outcome = myScore > opponentScore ? "won" : myScore < opponentScore ? "lost" : "tie";
+    const outcomeTitle = outcome === "won" ? "You won." : outcome === "lost" ? "Opponent won." : "It’s a tie.";
+    const outcomeLine = outcome === "won"
+        ? `You took it ${myScore.toLocaleString()} to ${opponentScore.toLocaleString()}. The 6ix is yours tonight.`
+        : outcome === "lost"
+            ? `They took it ${opponentScore.toLocaleString()} to ${myScore.toLocaleString()}. Run it back?`
+            : `Dead even at ${myScore.toLocaleString()} each. Nobody sleeps on that.`;
+
+    const requeueLink = <Link href="/?requeue=1" className="lr-primary" onClick={onRequeue ? event => {
+        event.preventDefault();
+        onRequeue();
+    } : undefined}>Requeue <span aria-hidden="true">↗</span></Link>;
+    const homeLink = (primary: boolean) => <Link href="/" className={primary ? "lr-primary" : "lr-secondary"}>
+        Back to main page <span aria-hidden="true">←</span>
+    </Link>;
+
     return (
         <ListeningRoom inGame>
             <header className="lr-game-heading">
                 <div>
-                    <h1>{cancelled ? "Opponent left." : game?.status === "finished" ? "Game Concluded" : "Classic Guess"}</h1>
+                    <h1 data-outcome={finished && !cancelled ? outcome : undefined}>
+                        {cancelled ? "Opponent left." : finished ? outcomeTitle : "Classic Guess"}
+                    </h1>
                 </div>
                 {!cancelled && <div className="lr-clock" role="timer" aria-label="Time remaining">
                     <span>{game?.roundPhase === "guessing" ? "TIME LEFT" : "THE MATCH"}</span>
@@ -209,15 +231,11 @@ export default function GameRoom({ roomId, connection, onRequeue }: {
                 <section className="lr-error" aria-label="Game unavailable">
                     <p role="alert">{error}</p>
                     <div className="lr-match-actions">
-                        {cancelled ? (
-                            <Link href="/?requeue=1" className="lr-primary" onClick={onRequeue ? event => {
-                                    event.preventDefault();
-                                    onRequeue();
-                                } : undefined}>Requeue?</Link>
-                        ) : (
-                            <button type="button" className="lr-secondary" disabled={!socket?.connected}
+                        {cancelled ? <>{requeueLink}{homeLink(false)}</> : homeLink(true)}
+                        {!cancelled && socket?.connected && (
+                            <button type="button" className="lr-text-button"
                                 onClick={() => setRequestVersion(version => version + 1)}>
-                                Load game again
+                                Try loading the game again
                             </button>
                         )}
                     </div>
@@ -253,13 +271,16 @@ export default function GameRoom({ roomId, connection, onRequeue }: {
                             <p role="status" aria-live="polite" className="lr-feedback">{feedback}</p>
                         </section>
                     ) : (
-                        <section className="lr-player lr-results" aria-label="Match complete">
-                            <h2>Play Again?</h2>
+                        <section className="lr-player lr-results" aria-label="Match complete" data-outcome={outcome}>
+                            <span className="lr-eyebrow">Final whistle · Last call</span>
+                            <h2>{outcome === "won" ? "Winner: You" : outcome === "lost" ? "Winner: Opponent" : "No winner — tie game"}</h2>
+                            <p className="lr-results-score" aria-label={`You ${myScore} points, opponent ${opponentScore} points`}>
+                                <b>{myScore.toLocaleString()}</b><span aria-hidden="true">—</span><b>{opponentScore.toLocaleString()}</b>
+                            </p>
+                            <p>{outcomeLine}</p>
                             <div className="lr-match-actions">
-                                <Link href="/?requeue=1" className="lr-primary" onClick={onRequeue ? event => {
-                                    event.preventDefault();
-                                    onRequeue();
-                                } : undefined}>Requeue</Link>
+                                {requeueLink}
+                                {homeLink(false)}
                             </div>
                         </section>
                     )}
@@ -268,9 +289,11 @@ export default function GameRoom({ roomId, connection, onRequeue }: {
                         {Object.entries(game.scores)
                             .sort(([a], [b]) => a === game.playerID ? -1 : b === game.playerID ? 1 : 0)
                             .map(([id, score]) => (
-                            <div key={id} className="lr-score">
+                            <div key={id} className={finished && outcome !== "tie" &&
+                                (id === game.playerID) === (outcome === "won") ? "lr-score is-winner" : "lr-score"}>
                                 <span className="lr-score-avatar" aria-hidden="true">{id === game.playerID ? "YOU" : "OP"}</span>
-                                <div><h2>{id === game.playerID ? "You" : "Opponent"}</h2><small>{id === game.playerID ? "YOUR SCORE" : "THE OTHER LISTENER"}</small></div>
+                                <div><h2>{id === game.playerID ? "You" : "Opponent"}</h2><small>{finished && outcome !== "tie" &&
+                                    (id === game.playerID) === (outcome === "won") ? "WINNER" : id === game.playerID ? "YOUR SCORE" : "THE OTHER LISTENER"}</small></div>
                                 <strong aria-label={`${score} points`}>{score.toLocaleString()}</strong>
                             </div>
                         ))}

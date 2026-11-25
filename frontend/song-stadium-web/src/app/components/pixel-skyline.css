@@ -1,0 +1,31 @@
+.pixel-skyline {
+    position: relative;
+    width: 100%;
+    height: clamp(240px, 36vw, 520px);
+    overflow: hidden;
+    background: #1d1b4f;
+}
+
+.pixel-skyline canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+/* Full-bleed hero that breaks out of .listening-room's side padding.
+   overflow-x: clip stops 100vw from causing a sideways scrollbar on Windows. */
+.listening-room { overflow-x: clip; }
+.pixel-skyline.pixel-skyline-hero {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-bottom: 48px;
+    border-top: 4px solid var(--lr-ink, #332a24);
+    border-bottom: 4px solid var(--lr-ink, #332a24);
+}
+
+@media (max-width: 760px) {
+    .pixel-skyline { height: clamp(200px, 56vw, 340px); }
+    .pixel-skyline.pixel-skyline-hero { margin-bottom: 32px; }
+}

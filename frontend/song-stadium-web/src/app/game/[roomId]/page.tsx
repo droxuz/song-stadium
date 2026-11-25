@@ -15,7 +15,9 @@ export default function GamePage() {
             <ListeningRoom inGame>
                 <section className="lr-error">
                     <p role="alert">This game link is invalid.</p>
-                    <Link href="/" className="lr-text-button">Back to the lobby</Link>
+                    <div className="lr-match-actions">
+                        <Link href="/" className="lr-primary">Back to main page <span aria-hidden="true">←</span></Link>
+                    </div>
                 </section>
             </ListeningRoom>
         );
